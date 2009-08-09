@@ -1,7 +1,7 @@
 //
-// File: TreeCanvas.cpp
+// File: TreeStatisticsBox.cpp
 // Created by: Julien Dutheil
-// Created on: Tue Oct 4 09:20 2006
+// Created on: Sun Aug 9 12:27 2009
 //
 
 /*
@@ -37,44 +37,43 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "TreeCanvas.h"
+#include "TreeStatisticsBox.h"
 
-//From PhyLib:
-#include <Phyl/CladogramPlot.h>
+//From Utils:
+#include <Utils/TextTools.h>
+
+//From NumCalc:
+#include <NumCalc/VectorTools.h>
+
+//From Qt:
+#include <QFormLayout>
 
 using namespace bpp;
 
-TreeCanvas::TreeCanvas(QWidget* parent) :
-  QWidget(parent),
-  currentTree_(0),
-  device_()
+TreeStatisticsBox::TreeStatisticsBox(QWidget* parent):
+  QGroupBox(parent),
+  leavesNumber_(this),
+  ancestorsNumber_(this),
+  maxFurcation_(this),
+  depth_(this),
+  height_(this)
 {
-  device_.setMargins(10,10,10,10);
-  device_.setPaintDevice(this);
-  defaultTreeDrawing_ = new CladogramPlot();
-  treeDrawing_ = defaultTreeDrawing_;
+  QFormLayout* layout = new QFormLayout();
+  layout->addRow(tr("# Leaves:"), &leavesNumber_);
+  layout->addRow(tr("# Ancestors:"), &ancestorsNumber_);
+  layout->addRow(tr("Max n-furcation:"), &maxFurcation_);
+  layout->addRow(tr("Depth:"), &depth_);
+  layout->addRow(tr("Height:"), &height_);
+  setLayout(layout);
 }
 
-void TreeCanvas::paintEvent(QPaintEvent* paintEvent)
+void TreeStatisticsBox::updateTree(const Tree& tree)
 {
-  if (treeDrawing_ && treeDrawing_->hasTree())
-  {
-    device_.begin();
-    treeDrawing_->setXUnit((static_cast<double>(width()) - device_.getMarginLeft() - device_.getMarginRight()) / treeDrawing_->getWidth());
-    treeDrawing_->setYUnit((static_cast<double>(height()) - device_.getMarginTop() - device_.getMarginBottom()) / treeDrawing_->getHeight());
-    treeDrawing_->plot(device_);
-    for (unsigned int i = 0; i < drawableProperties_.size(); i++)
-    {
-      treeDrawing_->drawProperty(device_, drawableProperties_[i]);
-    }
-    device_.end();
-  }
-}
-
-void TreeCanvas::setTree(const Tree* tree)
-{
-  currentTree_ = tree;
-  treeDrawing_->setTree(tree);
-  repaint();
+  stats_.setTree(tree);
+  leavesNumber_.setText(tr(TextTools::toString(stats_.getNumberOfLeaves()).c_str()));
+  ancestorsNumber_.setText(tr(TextTools::toString(stats_.getNumberOfAncestors()).c_str()));
+  maxFurcation_.setText(tr(TextTools::toString(VectorTools::max(stats_.getNodeNumberOfSons())).c_str()));
+  depth_.setText(tr(TextTools::toString(*stats_.getNodeDepths().rbegin()).c_str()));
+  height_.setText(tr(TextTools::toString(*stats_.getNodeHeights().rbegin()).c_str()));
 }
 

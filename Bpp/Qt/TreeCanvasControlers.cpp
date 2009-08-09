@@ -75,7 +75,6 @@ TreeCanvasControlers::TreeCanvasControlers(TreeCanvas* canvas, QWidget* parent):
   connect(drawingCtrl_, SIGNAL(currentIndexChanged(int)), this, SLOT(treeDrawingChanged()));
 
   orientationCtrl_ = new QGroupBox(parent);
-  orientationCtrl_->setTitle(QString("Orientation"));
   QRadioButton* leftButton  = new QRadioButton(QString("L"), orientationCtrl_);
   QRadioButton* rightButton = new QRadioButton(QString("R"), orientationCtrl_);
   QRadioButton* upButton    = new QRadioButton(QString("U"), orientationCtrl_);

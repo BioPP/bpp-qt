@@ -1,7 +1,7 @@
 //
-// File: TreeCanvas.cpp
+// File: TreeStatisticsBox.h
 // Created by: Julien Dutheil
-// Created on: Tue Oct 4 09:20 2006
+// Created on: Sun Aug 9 12:27 2009
 //
 
 /*
@@ -37,44 +37,47 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "TreeCanvas.h"
+#ifndef _TREESTATISTICSBOX_H_
+#define _TREESTATISTICSBOX_H_
 
-//From PhyLib:
-#include <Phyl/CladogramPlot.h>
 
-using namespace bpp;
+//From PhylLib:
+#include <Phyl/PhyloStatistics.h>
 
-TreeCanvas::TreeCanvas(QWidget* parent) :
-  QWidget(parent),
-  currentTree_(0),
-  device_()
+//From Qt:
+#include <QWidget>
+#include <QGroupBox>
+#include <QLabel>
+
+namespace bpp
 {
-  device_.setMargins(10,10,10,10);
-  device_.setPaintDevice(this);
-  defaultTreeDrawing_ = new CladogramPlot();
-  treeDrawing_ = defaultTreeDrawing_;
-}
 
-void TreeCanvas::paintEvent(QPaintEvent* paintEvent)
+/**
+ * @brief Panel that display a few statistics on a tree.
+ */
+class TreeStatisticsBox:
+  public QGroupBox
 {
-  if (treeDrawing_ && treeDrawing_->hasTree())
-  {
-    device_.begin();
-    treeDrawing_->setXUnit((static_cast<double>(width()) - device_.getMarginLeft() - device_.getMarginRight()) / treeDrawing_->getWidth());
-    treeDrawing_->setYUnit((static_cast<double>(height()) - device_.getMarginTop() - device_.getMarginBottom()) / treeDrawing_->getHeight());
-    treeDrawing_->plot(device_);
-    for (unsigned int i = 0; i < drawableProperties_.size(); i++)
-    {
-      treeDrawing_->drawProperty(device_, drawableProperties_[i]);
-    }
-    device_.end();
-  }
-}
+  Q_OBJECT
 
-void TreeCanvas::setTree(const Tree* tree)
-{
-  currentTree_ = tree;
-  treeDrawing_->setTree(tree);
-  repaint();
-}
+  protected:
+    PhyloStatistics stats_;
+    QLabel leavesNumber_;
+    QLabel ancestorsNumber_;
+    QLabel maxFurcation_;
+    QLabel depth_;
+    QLabel height_;
+
+  public:
+    TreeStatisticsBox(QWidget* parent = 0);
+    virtual ~TreeStatisticsBox() {}
+
+  public:
+    virtual void updateTree(const Tree& tree);
+    
+};
+
+} //end of namespace bpp.
+
+#endif //_TREESTATISTICSBOX_H_
 

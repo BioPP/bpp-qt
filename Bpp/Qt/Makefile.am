@@ -32,12 +32,14 @@
 H_FILES = \
 QtGraphicDevice.h \
 TreeCanvas.h \
-TreeCanvasControlers.h
+TreeCanvasControlers.h \
+TreeStatisticsBox.h
 
 CPP_FILES = \
 QtGraphicDevice.cpp \
 TreeCanvas.cpp \
-TreeCanvasControlers.cpp
+TreeCanvasControlers.cpp \
+TreeStatisticsBox.cpp
 
 AUTOMAKE_OPTIONS = gnu
 
@@ -47,7 +49,8 @@ libbpp_qt_la_SOURCES = $(H_FILES) $(CPP_FILES)
 # List of mocced .h files:
 nodist_libbpp_qt_la_SOURCES = \
 	moc_TreeCanvas.cpp \
-	moc_TreeCanvasControlers.cpp
+	moc_TreeCanvasControlers.cpp \
+	moc_TreeStatisticsBox.cpp
 
 
 # This rule lets GNU make create any moc_*.cpp from the equivalent *.h
