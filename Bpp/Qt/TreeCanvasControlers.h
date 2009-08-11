@@ -88,20 +88,21 @@ class TreeCanvasControlers:
     
     // Other controls may be added later.
     
+    bool blockSignal_;
+    
   public:
     /**
-     * @param canvas The tree canvas object these controlers are to be associated with.
      * @param parent The parent widget to pass to all controlers.
      * This should be set to null if you do not intend to use all the controlers,
      * or intend to use them witht different parent windows.
      */
-    TreeCanvasControlers(TreeCanvas* canvas, QWidget* parent = 0);
+    TreeCanvasControlers(QWidget* parent = 0);
     virtual ~TreeCanvasControlers();
 
   public:
 
     /**
-     * @brief Actualize the controls according to the current tree drawing.
+     * @brief Actualize the controls according to the current tree canvas.
      */
     void actualizeOptions();
 
@@ -113,18 +114,17 @@ class TreeCanvasControlers:
      */
     QWidget* getControlerById(int id);
 
-    void setTreeCanvas(TreeCanvas* canvas)
-    { 
-      treeCanvas_ = canvas;
-      //Re-associate tree with drawing:
-      treeCanvas_->setTreeDrawing(treeCanvas_->getTreeDrawing());
-    }
+    void setTreeCanvas(TreeCanvas* canvas, bool updateOptions = true);
     TreeCanvas* getTreeCanvas() { return treeCanvas_; }
     const TreeCanvas* getTreeCanvas() const { return treeCanvas_; }
 
     TreeDrawing* getTreeDrawing(unsigned int i);
+    
+    TreeDrawing* getSelectedTreeDrawing() { return getTreeDrawing(static_cast<unsigned int>(drawingCtrl_->currentIndex())); }
 
     unsigned int getNumberOfTreeDrawings() const { return 2; }
+
+    void applyOptions(TreeCanvas* canvas) const;
 
   private slots:
     void treeDrawingChanged();

@@ -55,7 +55,7 @@ const int TreeCanvasControlers::ID_DRAW_LEAVES_NAMES_CTRL     = 7;
 const int TreeCanvasControlers::ID_DRAW_BRLEN_VALUES_CTRL     = 8;
 const int TreeCanvasControlers::ID_DRAW_BOOTSTRAP_VALUES_CTRL = 9;
 
-TreeCanvasControlers::TreeCanvasControlers(TreeCanvas* canvas, QWidget* parent): treeCanvas_(canvas)
+TreeCanvasControlers::TreeCanvasControlers(QWidget* parent): treeCanvas_(0)
 {
   //Drawing algorithms:
   phylogram_ = new PhylogramPlot();
@@ -107,7 +107,8 @@ TreeCanvasControlers::TreeCanvasControlers(TreeCanvas* canvas, QWidget* parent):
   connect(drawLeavesNames_       , SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
   connect(drawBranchLengthValues_, SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
   connect(drawBootstrapValues_   , SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
-   
+  
+  blockSignal_ = false;
   actualizeOptions();
 }
 
@@ -126,56 +127,88 @@ TreeCanvasControlers::~TreeCanvasControlers()
   delete cladogram_;
 }
 
-void TreeCanvasControlers::treeDrawingChanged()
+
+
+void TreeCanvasControlers::setTreeCanvas(TreeCanvas* canvas, bool updateOptions)
 {
-  if (!treeCanvas_) return;
+  treeCanvas_ = canvas;
+  if (updateOptions) actualizeOptions();
+  else applyOptions(treeCanvas_);
+}
+
+
+
+void TreeCanvasControlers::applyOptions(TreeCanvas* canvas) const
+{
+  cout << "apply options" << endl;
   QString selection = drawingCtrl_->currentText();
-  if (selection == QString(cladogram_->getName().c_str()))
+  if (QString(canvas->getTreeDrawing()->getName().c_str()) != selection)
   {
-    treeCanvas_->setTreeDrawing(cladogram_);
+    if (selection == QString(cladogram_->getName().c_str()))
+    {
+      canvas->setTreeDrawing(*cladogram_);
+    }
+    else if (selection == QString(phylogram_->getName().c_str()))
+    {
+      canvas->setTreeDrawing(*phylogram_);
+    }
   }
-  else if (selection == QString(phylogram_->getName().c_str()))
-  {
-    treeCanvas_->setTreeDrawing(phylogram_);
-  }
-  AbstractDendrogramPlot* treeDrawing = dynamic_cast<AbstractDendrogramPlot*>(treeCanvas_->getTreeDrawing());
+  AbstractDendrogramPlot* treeDrawing = dynamic_cast<AbstractDendrogramPlot*>(canvas->getTreeDrawing());
   
   treeDrawing->setHorizontalOrientation(orientationLeftRight_->checkedId() == 1 ? AbstractDendrogramPlot::ORIENTATION_LEFT_TO_RIGHT : AbstractDendrogramPlot::ORIENTATION_RIGHT_TO_LEFT);
   treeDrawing->setVerticalOrientation(orientationUpDown_->checkedId() == 3 ? AbstractDendrogramPlot::ORIENTATION_TOP_TO_BOTTOM : AbstractDendrogramPlot::ORIENTATION_BOTTOM_TO_TOP);
-  treeCanvas_->getDevice().setMargins(
+  canvas->getDevice().setMargins(
       10,
       (orientationLeftRight_->checkedId() == 1 ? 10 : 150),
       10,
       (orientationLeftRight_->checkedId() == 2 ? 10 : 150)
     );
 
-//  treeCanvas_->setDrawProperty();
-  treeCanvas_->setDrawProperty(AbstractDendrogramPlot::PROPERTY_IDS, drawNodesId_->isChecked());
-//  treeCanvas_->showLeavesNames(drawLeavesNames_->isChecked());
-  treeCanvas_->setDrawProperty(AbstractDendrogramPlot::PROPERTY_BRLEN, drawBranchLengthValues_->isChecked());
-  treeCanvas_->setDrawProperty(AbstractDendrogramPlot::PROPERTY_BOOTSTRAP, drawBootstrapValues_->isChecked());
+//  canvas->setDrawProperty();
+  canvas->setDrawProperty(AbstractDendrogramPlot::PROPERTY_IDS, drawNodesId_->isChecked());
+//  canvas->showLeavesNames(drawLeavesNames_->isChecked());
+  canvas->setDrawProperty(AbstractDendrogramPlot::PROPERTY_BRLEN, drawBranchLengthValues_->isChecked());
+  canvas->setDrawProperty(AbstractDendrogramPlot::PROPERTY_BOOTSTRAP, drawBootstrapValues_->isChecked());
 
   //Refresh the drawing:
-  treeCanvas_->repaint();
+  canvas->repaint();
+}
+
+
+
+void TreeCanvasControlers::treeDrawingChanged()
+{
+  if (!treeCanvas_) return;
+  if (! blockSignal_) applyOptions(treeCanvas_);
 }
 
 
 void TreeCanvasControlers::treeDrawingUnitChanged()
 {
-  if (treeCanvas_)
-  {
-    treeCanvas_->resize(widthCtrl_->value(), heightCtrl_->value());
-  }
+  if (!treeCanvas_) return;
+  treeCanvas_->resize(widthCtrl_->value(), heightCtrl_->value());
   treeCanvas_->repaint();
 }
 
 void TreeCanvasControlers::actualizeOptions()
 {
+  cout << "actualize options" << endl;
   if (!treeCanvas_) return;
-  TreeDrawing* current = treeCanvas_->getTreeDrawing();
+  AbstractDendrogramPlot* current = dynamic_cast<AbstractDendrogramPlot *>(treeCanvas_->getTreeDrawing());
   widthCtrl_->setValue(treeCanvas_->width());
   heightCtrl_->setValue(treeCanvas_->height());
+  blockSignal_ = true; //Dirty trick but no choice!
   drawingCtrl_->setCurrentIndex(availableTreeDrawings_.indexOf(QString(current->getName().c_str())));
+  blockSignal_ = false;
+  if (current->getHorizontalOrientation() == AbstractDendrogramPlot::ORIENTATION_LEFT_TO_RIGHT)
+    orientationLeftRight_->buttons()[0]->setChecked(true);
+  else
+    orientationLeftRight_->buttons()[1]->setChecked(true);
+  if (current->getVerticalOrientation() == AbstractDendrogramPlot::ORIENTATION_TOP_TO_BOTTOM)
+    orientationUpDown_->buttons()[0]->setChecked(true);
+  else  
+    orientationUpDown_->buttons()[0]->setChecked(true);
+  
   //drawClickableAreas_    ->setChecked(treeCanvas_->showClickableAreas());
   drawNodesId_           ->setChecked(treeCanvas_->isPropertyDrawn(AbstractDendrogramPlot::PROPERTY_IDS));
   //drawLeavesNames_       ->setChecked(treeCanvas_->showLeavesNames());
