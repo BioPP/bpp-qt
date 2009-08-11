@@ -140,17 +140,16 @@ void TreeCanvasControlers::setTreeCanvas(TreeCanvas* canvas, bool updateOptions)
 
 void TreeCanvasControlers::applyOptions(TreeCanvas* canvas) const
 {
-  cout << "apply options" << endl;
   QString selection = drawingCtrl_->currentText();
   if (QString(canvas->getTreeDrawing()->getName().c_str()) != selection)
   {
     if (selection == QString(cladogram_->getName().c_str()))
     {
-      canvas->setTreeDrawing(*cladogram_);
+      canvas->setTreeDrawing(*cladogram_, false);
     }
     else if (selection == QString(phylogram_->getName().c_str()))
     {
-      canvas->setTreeDrawing(*phylogram_);
+      canvas->setTreeDrawing(*phylogram_, false);
     }
   }
   AbstractDendrogramPlot* treeDrawing = dynamic_cast<AbstractDendrogramPlot*>(canvas->getTreeDrawing());
@@ -186,20 +185,21 @@ void TreeCanvasControlers::treeDrawingChanged()
 void TreeCanvasControlers::treeDrawingUnitChanged()
 {
   if (!treeCanvas_) return;
-  treeCanvas_->resize(widthCtrl_->value(), heightCtrl_->value());
-  treeCanvas_->repaint();
+  if (! blockSignal_)
+  {
+    treeCanvas_->resize(widthCtrl_->value(), heightCtrl_->value());
+    treeCanvas_->repaint();
+  }
 }
 
 void TreeCanvasControlers::actualizeOptions()
 {
-  cout << "actualize options" << endl;
   if (!treeCanvas_) return;
-  AbstractDendrogramPlot* current = dynamic_cast<AbstractDendrogramPlot *>(treeCanvas_->getTreeDrawing());
+  AbstractDendrogramPlot* current = dynamic_cast<AbstractDendrogramPlot*>(treeCanvas_->getTreeDrawing());
+  blockSignal_ = true; //Dirty trick but no choice!
   widthCtrl_->setValue(treeCanvas_->width());
   heightCtrl_->setValue(treeCanvas_->height());
-  blockSignal_ = true; //Dirty trick but no choice!
   drawingCtrl_->setCurrentIndex(availableTreeDrawings_.indexOf(QString(current->getName().c_str())));
-  blockSignal_ = false;
   if (current->getHorizontalOrientation() == AbstractDendrogramPlot::ORIENTATION_LEFT_TO_RIGHT)
     orientationLeftRight_->buttons()[0]->setChecked(true);
   else
@@ -207,13 +207,14 @@ void TreeCanvasControlers::actualizeOptions()
   if (current->getVerticalOrientation() == AbstractDendrogramPlot::ORIENTATION_TOP_TO_BOTTOM)
     orientationUpDown_->buttons()[0]->setChecked(true);
   else  
-    orientationUpDown_->buttons()[0]->setChecked(true);
+    orientationUpDown_->buttons()[1]->setChecked(true);
   
   //drawClickableAreas_    ->setChecked(treeCanvas_->showClickableAreas());
   drawNodesId_           ->setChecked(treeCanvas_->isPropertyDrawn(AbstractDendrogramPlot::PROPERTY_IDS));
   //drawLeavesNames_       ->setChecked(treeCanvas_->showLeavesNames());
   drawBranchLengthValues_->setChecked(treeCanvas_->isPropertyDrawn(AbstractDendrogramPlot::PROPERTY_BRLEN));
   drawBootstrapValues_   ->setChecked(treeCanvas_->isPropertyDrawn(AbstractDendrogramPlot::PROPERTY_BOOTSTRAP));
+  blockSignal_ = false;
 }
 
 QWidget* TreeCanvasControlers::getControlerById(int id)

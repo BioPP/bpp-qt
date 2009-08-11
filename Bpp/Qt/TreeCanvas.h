@@ -88,13 +88,13 @@ class TreeCanvas:
     
     virtual const Tree* getTree() const { return currentTree_; }
 
-    virtual void setTreeDrawing(const TreeDrawing& treeDrawing)
+    virtual void setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint = true)
     {
       if (treeDrawing_ != defaultTreeDrawing_)
         delete treeDrawing_;
       treeDrawing_ = dynamic_cast<TreeDrawing *>(treeDrawing.clone());
       treeDrawing_->setTree(currentTree_);
-      repaint();
+      if (repaint) this->repaint();
     }
 
     virtual void setDrawPropertyOn(const std::string& property)
