@@ -11,13 +11,16 @@ set(CPP_FILES
   )
 set(H_FILES
   QtGraphicDevice.h
+  )
+set(H_MOC_FILES
   TreeCanvas.h
   TreeCanvasControlers.h
   TreeStatisticsBox.h
   )
+qt4_wrap_cpp(CPP_MOC_FILES ${H_MOC_FILES})
 
 # Build the static lib
-add_library(bppqt-static STATIC ${CPP_FILES})
+add_library(bppqt-static STATIC ${CPP_FILES} ${CPP_MOC_FILES})
 set_target_properties(bppqt-static
   PROPERTIES OUTPUT_NAME bpp-qt
   CLEAN_DIRECT_OUTPUT 1
@@ -25,7 +28,7 @@ set_target_properties(bppqt-static
 target_link_libraries(bppqt-static ${LIBS})
 
 # Build the shared lib
-add_library(bppqt-shared SHARED ${CPP_FILES})
+add_library(bppqt-shared SHARED ${CPP_FILES} ${CPP_MOC_FILES})
 set_target_properties(bppqt-shared
   PROPERTIES OUTPUT_NAME bpp-qt
   CLEAN_DIRECT_OUTPUT 1
@@ -38,4 +41,4 @@ target_link_libraries(bppqt-shared ${LIBS})
 install(TARGETS bppqt-static bppqt-shared DESTINATION lib)
 
 # Install headers
-install(FILES ${H_FILES} DESTINATION include/Bpp/Qt)
+install(FILES ${H_FILES} ${H_MOC_FILES} DESTINATION include/Bpp/Qt)
