@@ -81,7 +81,7 @@ class QtGraphicDevice:
     void drawCircle(double x, double y, double radius, short fill = FILL_EMPTY);
     void drawText(double x, double y, const std::string& text, short hpos = TEXT_HORIZONTAL_LEFT, short vpos = TEXT_VERTICAL_BOTTOM, double angle = 0) throw (UnvalidFlagException);
     
-    void comment(const string& comment) {}
+    void comment(const std::string& comment) {}
 
     /**
      * @return The painter object used by this device.
