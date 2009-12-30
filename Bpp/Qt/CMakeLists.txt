@@ -11,6 +11,7 @@ set(CPP_FILES
   )
 set(H_FILES
   QtGraphicDevice.h
+  QtTools.h
   )
 set(H_MOC_FILES
   TreeCanvas.h

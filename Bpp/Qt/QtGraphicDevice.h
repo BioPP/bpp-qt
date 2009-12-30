@@ -43,7 +43,12 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <Utils/AbstractGraphicDevice.h>
 
+//From Qt:
 #include <QPainter>
+#include <Qt>
+
+//From the STL:
+#include <map>
 
 namespace bpp
 {
@@ -59,6 +64,7 @@ class QtGraphicDevice:
   private:
     QPainter painter_;
     QPaintDevice* device_;
+    std::map<short int, Qt::PenStyle> supportedLineTypes_;
 
   public:
     QtGraphicDevice();
@@ -73,7 +79,7 @@ class QtGraphicDevice:
     void setCurrentBackgroundColor(const RGBColor& color);
     void setCurrentFont(const Font& font);
     void setCurrentPointSize(unsigned int size);
-    void setCurrentLineType(short type);
+    void setCurrentLineType(short type) throw (Exception);
     void setCurrentLayer(int layerIndex);
 
     void drawLine(double x1, double y1, double x2, double y2);

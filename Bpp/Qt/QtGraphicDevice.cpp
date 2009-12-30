@@ -39,12 +39,20 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "QtGraphicDevice.h"
+#include "QtTools.h"
+
+//From the STL:
 #include <iostream>
 using namespace std;
 
 using namespace bpp;
 
-QtGraphicDevice::QtGraphicDevice(): painter_(), device_(NULL) {}
+QtGraphicDevice::QtGraphicDevice(): painter_(), device_(0), supportedLineTypes_()
+{
+  supportedLineTypes_[GraphicDevice::LINE_SOLID] = Qt::SolidLine;
+  supportedLineTypes_[GraphicDevice::LINE_DASHED] = Qt::DashLine;
+  supportedLineTypes_[GraphicDevice::LINE_DOTTED] = Qt::DotLine;
+}
 
 void QtGraphicDevice::setPaintDevice(QPaintDevice* device)
 {
@@ -69,29 +77,40 @@ void QtGraphicDevice::end()
 
 void QtGraphicDevice::setCurrentForegroundColor(const RGBColor& color)
 {
-  
+  AbstractGraphicDevice::setCurrentForegroundColor(color);
+  QPen pen = painter_.pen();
+  pen.setColor(QtTools::toQt(color));
+  painter_.setPen(pen);
 }
 
 void QtGraphicDevice::setCurrentBackgroundColor(const RGBColor& color)
 {
-
+  AbstractGraphicDevice::setCurrentBackgroundColor(color);
+  QBrush brush = painter_.brush();
+  brush.setColor(QtTools::toQt(color));
+  painter_.setBrush(brush);
 }
 
 void QtGraphicDevice::setCurrentFont(const Font& font)
 {
-
+  AbstractGraphicDevice::setCurrentFont(font);
+  painter_.setFont(QtTools::toQt(font));
 }
 
 void QtGraphicDevice::setCurrentPointSize(unsigned int size)
 {
+  AbstractGraphicDevice::setCurrentPointSize(size);
   QPen pen = painter_.pen();
   pen.setWidth(static_cast<uint>(size));
   painter_.setPen(pen);
 }
 
-void QtGraphicDevice::setCurrentLineType(short type)
+void QtGraphicDevice::setCurrentLineType(short type) throw (Exception)
 {
-
+  AbstractGraphicDevice::setCurrentLineType(type);
+  QPen pen = painter_.pen();
+  pen.setStyle(supportedLineTypes_[type]);
+  painter_.setPen(pen);
 }
 
 void QtGraphicDevice::setCurrentLayer(int layerIndex)
