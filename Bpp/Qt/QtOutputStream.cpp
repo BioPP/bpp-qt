@@ -1,7 +1,6 @@
-//
-// File: QtTools.h
+// File: QtOutputStream.h
 // Created by: Julien Dutheil
-// Created on: Wed Dec 30 2009
+// Created on: Mon Jan 25 2010
 //
 
 /*
@@ -38,57 +37,22 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _QTTOOLS_H_
-#define _QTTOOLS_H_
+#include "QtOutputStream.h"
 
-//From Utils:
-#include <Utils/RGBColor.h>
-#include <Utils/Font.h>
-#include <QColor>
-#include <QFont>
+using namespace bpp;
 
-namespace bpp
+void QtOutputStream::checkNumberOfLines()
 {
-
-/**
- * @brief Utilitary functions for working with Qt.
- *
- * Contains mostly conversion tools.
- */
-class QtTools
-{
-public:
-
-  static QString toQt(const std::string& str)
+  QString text = toPlainText();
+  unsigned int nbLines = static_cast<unsigned int>(text.count('\n'));
+  if (nbLines > maxNbLines_)
   {
-    return QString(str.c_str());
+    unsigned int rm = nbLines - maxNbLines_;
+    for (unsigned int i = 0; i < rm; i++)
+    {
+      text.remove(0, text.indexOf('\n') + 1);
+    }
+    setPlainText(text);
   }
-
-  static QColor toQt(const RGBColor& color)
-  {
-    return QColor(color[0], color[1], color[2]);
-  }
-
-  static QFont toQt(const Font& font)
-  {
-    QFont qFont(toQt(font.getFamily()), static_cast<int>(font.getSize()));
-    
-    if (font.getStyle() == Font::STYLE_NORMAL)
-      qFont.setStyle(QFont::StyleNormal); 
-    else if(font.getStyle() == Font::STYLE_ITALIC)
-      qFont.setStyle(QFont::StyleItalic); 
-    
-    if (font.getWeight() == Font::WEIGHT_NORMAL)
-      qFont.setWeight(QFont::Normal); 
-    else if (font.getWeight() == Font::WEIGHT_BOLD)
-      qFont.setWeight(QFont::Bold); 
-    
-    return qFont;
- }
-
-};
-
-} //end of namespace bpp;
-
-#endif //_QTTOOLS_H_
+}
 

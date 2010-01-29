@@ -5,6 +5,7 @@
 # File list
 set(CPP_FILES
   QtGraphicDevice.cpp
+  QtOutputStream.cpp
   TreeCanvas.cpp
   TreeCanvasControlers.cpp
   TreeStatisticsBox.cpp
@@ -12,9 +13,10 @@ set(CPP_FILES
 set(H_FILES
   QtGraphicDevice.h
   QtTools.h
+  QtOutputStream.h
+  TreeCanvas.h
   )
 set(H_MOC_FILES
-  TreeCanvas.h
   TreeCanvasControlers.h
   TreeStatisticsBox.h
   )

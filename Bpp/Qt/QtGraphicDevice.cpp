@@ -49,6 +49,7 @@ using namespace bpp;
 
 QtGraphicDevice::QtGraphicDevice(): painter_(), device_(0), supportedLineTypes_()
 {
+  painter_.setBrush(QBrush(Qt::SolidPattern));
   supportedLineTypes_[GraphicDevice::LINE_SOLID] = Qt::SolidLine;
   supportedLineTypes_[GraphicDevice::LINE_DASHED] = Qt::DashLine;
   supportedLineTypes_[GraphicDevice::LINE_DOTTED] = Qt::DotLine;
