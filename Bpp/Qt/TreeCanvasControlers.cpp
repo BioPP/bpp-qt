@@ -170,7 +170,7 @@ void TreeCanvasControlers::applyOptions(TreeCanvas* canvas) const
   canvas->setDrawProperty(AbstractDendrogramPlot::PROPERTY_BOOTSTRAP, drawBootstrapValues_->isChecked());
 
   //Refresh the drawing:
-  canvas->repaint();
+  canvas->redraw();
 }
 
 
@@ -187,8 +187,7 @@ void TreeCanvasControlers::treeDrawingUnitChanged()
   if (!treeCanvas_) return;
   if (! blockSignal_)
   {
-    treeCanvas_->resize(widthCtrl_->value(), heightCtrl_->value());
-    treeCanvas_->repaint();
+    treeCanvas_->setDrawingSize(widthCtrl_->value(), heightCtrl_->value());
   }
 }
 
@@ -197,8 +196,8 @@ void TreeCanvasControlers::actualizeOptions()
   if (!treeCanvas_) return;
   AbstractDendrogramPlot* current = dynamic_cast<AbstractDendrogramPlot*>(treeCanvas_->getTreeDrawing());
   blockSignal_ = true; //Dirty trick but no choice!
-  widthCtrl_->setValue(treeCanvas_->width());
-  heightCtrl_->setValue(treeCanvas_->height());
+  widthCtrl_->setValue(treeCanvas_->drawingWidth());
+  heightCtrl_->setValue(treeCanvas_->drawingHeight());
   drawingCtrl_->setCurrentIndex(availableTreeDrawings_.indexOf(QString(current->getName().c_str())));
   if (current->getHorizontalOrientation() == AbstractDendrogramPlot::ORIENTATION_LEFT_TO_RIGHT)
     orientationLeftRight_->buttons()[0]->setChecked(true);

@@ -1,3 +1,7 @@
+05/02/2010 Julien Dutheil
+* New QtGraphicDevice, now uses QGraphicsScene => Works with layers, and
+faster rendering for TreeCanvas!
+
 30/12/09 Julien Dutheil
 * Improved QtGraphicDevice.
 * Added class QtTools.

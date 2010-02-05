@@ -44,24 +44,30 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
+#include <iostream>
+using namespace std;
+
 TreeCanvas::TreeCanvas(QWidget* parent) :
-  QWidget(parent),
+  QGraphicsView(parent),
   currentTree_(0),
-  device_()
+  device_(),
+  drawingWidth_(600),
+  drawingHeight_(800)
 {
+  setScene(&device_.getScene());
   device_.setMargins(10,10,10,10);
-  device_.setPaintDevice(this);
   defaultTreeDrawing_ = new CladogramPlot();
   treeDrawing_ = defaultTreeDrawing_;
 }
 
-void TreeCanvas::paintEvent(QPaintEvent* paintEvent)
+//void TreeCanvas::paintEvent(QPaintEvent* paintEvent)
+void TreeCanvas::redraw() const
 {
   if (treeDrawing_ && treeDrawing_->hasTree())
   {
     device_.begin();
-    treeDrawing_->setXUnit((static_cast<double>(width()) - device_.getMarginLeft() - device_.getMarginRight()) / treeDrawing_->getWidth());
-    treeDrawing_->setYUnit((static_cast<double>(height()) - device_.getMarginTop() - device_.getMarginBottom()) / treeDrawing_->getHeight());
+    treeDrawing_->setXUnit((static_cast<double>(drawingWidth()) - device_.getMarginLeft() - device_.getMarginRight()) / treeDrawing_->getWidth());
+    treeDrawing_->setYUnit((static_cast<double>(drawingHeight()) - device_.getMarginTop() - device_.getMarginBottom()) / treeDrawing_->getHeight());
     treeDrawing_->plot(device_);
     for (unsigned int i = 0; i < drawableProperties_.size(); i++)
     {
@@ -75,6 +81,6 @@ void TreeCanvas::setTree(const Tree* tree)
 {
   currentTree_ = tree;
   treeDrawing_->setTree(tree);
-  repaint();
+  redraw();
 }
 

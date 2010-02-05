@@ -44,7 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Utils/AbstractGraphicDevice.h>
 
 //From Qt:
-#include <QPainter>
+#include <QGraphicsScene>
 #include <Qt>
 
 //From the STL:
@@ -62,16 +62,19 @@ class QtGraphicDevice:
   public AbstractGraphicDevice
 {
   private:
-    QPainter painter_;
-    QPaintDevice* device_;
+    QGraphicsScene scene_;
     std::map<short int, Qt::PenStyle> supportedLineTypes_;
+    QPen currentPen_;
+    QBrush currentBrush_;
+    QFont currentFont_;
 
   public:
     QtGraphicDevice();
     virtual ~QtGraphicDevice();
 
   public:
-    void setPaintDevice(QPaintDevice* device);
+    QGraphicsScene& getScene() { return scene_; }
+
     void begin() throw (Exception);
     void end();
 
@@ -80,7 +83,6 @@ class QtGraphicDevice:
     void setCurrentFont(const Font& font);
     void setCurrentPointSize(unsigned int size);
     void setCurrentLineType(short type) throw (Exception);
-    void setCurrentLayer(int layerIndex);
 
     void drawLine(double x1, double y1, double x2, double y2);
     void drawRect(double x, double y, double width, double height, short fill = FILL_EMPTY);
@@ -88,11 +90,6 @@ class QtGraphicDevice:
     void drawText(double x, double y, const std::string& text, short hpos = TEXT_HORIZONTAL_LEFT, short vpos = TEXT_VERTICAL_BOTTOM, double angle = 0) throw (UnvalidFlagException);
     
     void comment(const std::string& comment) {}
-
-    /**
-     * @return The painter object used by this device.
-     */
-    const QPainter& getPainter() const { return painter_; }
 
   protected:
     int xpos(double x) const { return static_cast<int>(round(x_(x))); }

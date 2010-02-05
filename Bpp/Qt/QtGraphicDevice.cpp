@@ -41,23 +41,24 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "QtGraphicDevice.h"
 #include "QtTools.h"
 
+//From Qt:
+#include <QGraphicsLineItem>
+#include <QGraphicsRectItem>
+#include <QGraphicsTextItem>
+#include <QTextDocument>
+
 //From the STL:
 #include <iostream>
 using namespace std;
 
 using namespace bpp;
 
-QtGraphicDevice::QtGraphicDevice(): painter_(), device_(0), supportedLineTypes_()
+QtGraphicDevice::QtGraphicDevice() :
+  scene_(), supportedLineTypes_(), currentPen_(), currentBrush_(), currentFont_()
 {
-  painter_.setBrush(QBrush(Qt::SolidPattern));
   supportedLineTypes_[GraphicDevice::LINE_SOLID] = Qt::SolidLine;
   supportedLineTypes_[GraphicDevice::LINE_DASHED] = Qt::DashLine;
   supportedLineTypes_[GraphicDevice::LINE_DOTTED] = Qt::DotLine;
-}
-
-void QtGraphicDevice::setPaintDevice(QPaintDevice* device)
-{
-  device_ = device;
   setXUnit(1.);
   setYUnit(1.);
 }
@@ -66,68 +67,60 @@ QtGraphicDevice::~QtGraphicDevice() {}
 
 void QtGraphicDevice::begin() throw (Exception)
 {
-  if (!device_) throw Exception("QtGraphicDevice::begin(). No QPaintDevice was specified.");
-  if (!painter_.begin(device_))
-    throw Exception("QtGraphicDevice::begin(). Cannot print on device.");
+  scene_.clear();
 }
 
 void QtGraphicDevice::end()
 {
-  painter_.end();
 }
 
 void QtGraphicDevice::setCurrentForegroundColor(const RGBColor& color)
 {
   AbstractGraphicDevice::setCurrentForegroundColor(color);
-  QPen pen = painter_.pen();
-  pen.setColor(QtTools::toQt(color));
-  painter_.setPen(pen);
+  currentPen_.setColor(QtTools::toQt(color));
 }
 
 void QtGraphicDevice::setCurrentBackgroundColor(const RGBColor& color)
 {
   AbstractGraphicDevice::setCurrentBackgroundColor(color);
-  QBrush brush = painter_.brush();
-  brush.setColor(QtTools::toQt(color));
-  painter_.setBrush(brush);
+  currentBrush_.setColor(QtTools::toQt(color));
 }
 
 void QtGraphicDevice::setCurrentFont(const Font& font)
 {
   AbstractGraphicDevice::setCurrentFont(font);
-  painter_.setFont(QtTools::toQt(font));
+  currentFont_ = QtTools::toQt(font);
 }
 
 void QtGraphicDevice::setCurrentPointSize(unsigned int size)
 {
   AbstractGraphicDevice::setCurrentPointSize(size);
-  QPen pen = painter_.pen();
-  pen.setWidth(static_cast<uint>(size));
-  painter_.setPen(pen);
+  currentPen_.setWidth(static_cast<uint>(size));
 }
 
 void QtGraphicDevice::setCurrentLineType(short type) throw (Exception)
 {
   AbstractGraphicDevice::setCurrentLineType(type);
-  QPen pen = painter_.pen();
-  pen.setStyle(supportedLineTypes_[type]);
-  painter_.setPen(pen);
+  currentPen_.setStyle(supportedLineTypes_[type]);
 }
 
-void QtGraphicDevice::setCurrentLayer(int layerIndex)
-{
-
-}
+//void QtGraphicDevice::setCurrentLayer(int layerIndex)
+//{
+//
+//}
 
 void QtGraphicDevice::drawLine(double x1, double y1, double x2, double y2)
 {
-  painter_.drawLine(xpos(x1), ypos(y1), xpos(x2), ypos(y2));
+  QGraphicsLineItem* item = scene_.addLine(xpos(x1), ypos(y1), xpos(x2), ypos(y2), currentPen_);
+  item->setZValue(qreal(getCurrentLayer()));
 }
 
 
 void QtGraphicDevice::drawRect(double x, double y, double width, double height, short fill)
 {
-  painter_.drawRect(xpos(x), ypos(y), xpos(width), ypos(height));
+  QGraphicsRectItem* item = scene_.addRect(xpos(x), ypos(y), width * getXUnit(), height * getYUnit(), currentPen_);
+  item->setZValue(qreal(getCurrentLayer()));
+  //painter_.fillRect(xpos(x), ypos(y), width * getXUnit(), height * getYUnit(), QBrush(QtTools::toQt(getCurrentBackgroundColor()), Qt::SolidPattern));
 }
 
 void QtGraphicDevice::drawCircle(double x, double y, double radius, short fill)
@@ -139,7 +132,8 @@ void QtGraphicDevice::drawText(double x, double y, const std::string& text, shor
 {
   int xset = 0, yset = 0;
   QString qtext = text.c_str();
-  QSize fsize = painter_.fontMetrics().size(0, qtext);
+  QGraphicsTextItem* item = scene_.addText(qtext, currentFont_);
+  QSizeF fsize = item->document()->size();
   if (hpos ==  TEXT_HORIZONTAL_LEFT)
     xset = 0;
   else if (hpos ==  TEXT_HORIZONTAL_RIGHT)
@@ -156,6 +150,7 @@ void QtGraphicDevice::drawText(double x, double y, const std::string& text, shor
     yset = fsize.rheight() / 2;
   else throw UnvalidFlagException("QtGraphicDevice::drawText(). Unvalid vertical alignment option.");
 
-  painter_.drawText(xpos(x) + xset, ypos(y) + yset/2, qtext); //Dunno why, but apparently we need an additional factor of 2 here :s
+  item->setPos(xpos(x) + xset, ypos(y) - yset);
+  item->setZValue(qreal(getCurrentLayer()));
 }
 

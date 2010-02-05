@@ -52,7 +52,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Phyl/TreeDrawing.h>
 
 //From Qt:
-#include <QWidget>
+#include <QGraphicsView>
 
 namespace bpp
 {
@@ -64,14 +64,16 @@ namespace bpp
  * This panel can also capture event when a node is clicked on the tree.
  */
 class TreeCanvas:
-  public QWidget
+  public QGraphicsView
 {
-  protected:
+  private:
     const Tree* currentTree_;
     TreeDrawing* treeDrawing_;
     TreeDrawing* defaultTreeDrawing_;
-    QtGraphicDevice device_;
+    mutable QtGraphicDevice device_;
     std::vector<std::string> drawableProperties_;
+    unsigned int drawingWidth_;
+    unsigned int drawingHeight_;
 
   public:
     TreeCanvas(QWidget* parent = 0);
@@ -79,9 +81,6 @@ class TreeCanvas:
     {
       delete defaultTreeDrawing_;
     }
-
-  protected:
-    void paintEvent(QPaintEvent* paintEvent);
 
   public:
     virtual void setTree(const Tree* tree);
@@ -129,7 +128,17 @@ class TreeCanvas:
     virtual QtGraphicDevice& getDevice() { return device_; }
     virtual const QtGraphicDevice& getDevice() const { return device_; }
 
-    
+    virtual void redraw() const;
+
+    virtual void setDrawingSize(unsigned int width, unsigned int height)
+    {
+      drawingWidth_  = width;
+      drawingHeight_ = height;
+      redraw();
+    }
+
+    virtual unsigned int drawingWidth() const { return drawingWidth_; }
+    virtual unsigned int drawingHeight() const { return drawingHeight_; }
 
 };
 
