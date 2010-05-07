@@ -156,12 +156,6 @@ void TreeCanvasControlers::applyOptions(TreeCanvas* canvas) const
   
   treeDrawing->setHorizontalOrientation(orientationLeftRight_->checkedId() == 1 ? AbstractDendrogramPlot::ORIENTATION_LEFT_TO_RIGHT : AbstractDendrogramPlot::ORIENTATION_RIGHT_TO_LEFT);
   treeDrawing->setVerticalOrientation(orientationUpDown_->checkedId() == 3 ? AbstractDendrogramPlot::ORIENTATION_TOP_TO_BOTTOM : AbstractDendrogramPlot::ORIENTATION_BOTTOM_TO_TOP);
-  canvas->getDevice().setMargins(
-      10,
-      (orientationLeftRight_->checkedId() == 1 ? 10 : 150),
-      10,
-      (orientationLeftRight_->checkedId() == 2 ? 10 : 150)
-    );
 
 //  canvas->setDrawProperty();
   canvas->setDrawProperty(AbstractDendrogramPlot::PROPERTY_IDS, drawNodesId_->isChecked());

@@ -62,7 +62,7 @@ class QtGraphicDevice:
   public AbstractGraphicDevice
 {
   private:
-    QGraphicsScene scene_;
+    QGraphicsScene* scene_;
     std::map<short int, Qt::PenStyle> supportedLineTypes_;
     QPen currentPen_;
     QBrush currentBrush_;
@@ -73,7 +73,7 @@ class QtGraphicDevice:
     virtual ~QtGraphicDevice();
 
   public:
-    QGraphicsScene& getScene() { return scene_; }
+    QGraphicsScene& getScene() { return *scene_; }
 
     void begin() throw (Exception);
     void end();

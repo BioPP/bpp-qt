@@ -55,7 +55,7 @@ using namespace std;
 using namespace bpp;
 
 QtGraphicDevice::QtGraphicDevice() :
-  scene_(), supportedLineTypes_(), currentPen_(), currentBrush_(Qt::SolidPattern), currentFont_()
+  scene_(0), supportedLineTypes_(), currentPen_(), currentBrush_(Qt::SolidPattern), currentFont_()
 {
   supportedLineTypes_[GraphicDevice::LINE_SOLID] = Qt::SolidLine;
   supportedLineTypes_[GraphicDevice::LINE_DASHED] = Qt::DashLine;
@@ -68,7 +68,8 @@ QtGraphicDevice::~QtGraphicDevice() {}
 
 void QtGraphicDevice::begin() throw (Exception)
 {
-  scene_.clear();
+  if (scene_) delete scene_;
+  scene_ = new QGraphicsScene();
 }
 
 void QtGraphicDevice::end()
@@ -112,14 +113,14 @@ void QtGraphicDevice::setCurrentLineType(short type) throw (Exception)
 
 void QtGraphicDevice::drawLine(double x1, double y1, double x2, double y2)
 {
-  QGraphicsLineItem* item = scene_.addLine(xpos(x1), ypos(y1), xpos(x2), ypos(y2), currentPen_);
+  QGraphicsLineItem* item = scene_->addLine(xpos(x1), ypos(y1), xpos(x2), ypos(y2), currentPen_);
   item->setZValue(-qreal(getCurrentLayer()));
 }
 
 
 void QtGraphicDevice::drawRect(double x, double y, double width, double height, short fill)
 {
-  QGraphicsRectItem* item = scene_.addRect(xpos(x), ypos(y), width * getXUnit(), height * getYUnit(), currentPen_, currentBrush_);
+  QGraphicsRectItem* item = scene_->addRect(xpos(x), ypos(y), width * getXUnit(), height * getYUnit(), currentPen_, currentBrush_);
   item->setZValue(-qreal(getCurrentLayer()));
 }
 
@@ -132,7 +133,7 @@ void QtGraphicDevice::drawText(double x, double y, const std::string& text, shor
 {
   int xset = 0, yset = 0;
   QString qtext = text.c_str();
-  QGraphicsTextItem* item = scene_.addText(qtext, currentFont_);
+  QGraphicsTextItem* item = scene_->addText(qtext, currentFont_);
   QSizeF fsize = item->document()->size();
   QFontInfo fi(currentFont_);
   double mar = (fsize.rheight() - fi.pointSize()) / 2;

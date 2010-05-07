@@ -38,7 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "TreeCanvas.h"
-
+#include <QGraphicsItem>
 //From PhyLib:
 #include <Phyl/CladogramPlot.h>
 
@@ -54,26 +54,43 @@ TreeCanvas::TreeCanvas(QWidget* parent) :
   drawingWidth_(600),
   drawingHeight_(800)
 {
-  setScene(&device_.getScene());
-  device_.setMargins(10,10,10,10);
   defaultTreeDrawing_ = new CladogramPlot();
   treeDrawing_ = defaultTreeDrawing_;
 }
 
-//void TreeCanvas::paintEvent(QPaintEvent* paintEvent)
-void TreeCanvas::redraw() const
+void TreeCanvas::redraw()
 {
   if (treeDrawing_ && treeDrawing_->hasTree())
   {
     device_.begin();
-    treeDrawing_->setXUnit((static_cast<double>(drawingWidth()) - device_.getMarginLeft() - device_.getMarginRight()) / treeDrawing_->getWidth());
-    treeDrawing_->setYUnit((static_cast<double>(drawingHeight()) - device_.getMarginTop() - device_.getMarginBottom()) / treeDrawing_->getHeight());
+    treeDrawing_->setXUnit(static_cast<double>(drawingWidth()) / treeDrawing_->getWidth());
+    treeDrawing_->setYUnit(static_cast<double>(drawingHeight()) / treeDrawing_->getHeight());
     treeDrawing_->plot(device_);
-    for (unsigned int i = 0; i < drawableProperties_.size(); i++)
-    {
+    for (unsigned int i = 0; i < drawableProperties_.size(); i++) {
       treeDrawing_->drawProperty(device_, drawableProperties_[i]);
     }
     device_.end();
+    QGraphicsScene* scene = &device_.getScene();
+    
+    //Need to do that because line have can have a bounding box width null dimension.
+    QRectF rect;
+    QList<QGraphicsItem*> items = scene->items();
+    for(int i = 0; i < items.size(); i++) {
+      QRectF bb = items[i]->boundingRegion(items[i]->sceneTransform()).boundingRect();
+      if (i == 0) rect = bb;
+      else {
+        rect.setLeft(min(rect.left(), bb.left()));
+        rect.setRight(max(rect.right(), bb.right()));
+        rect.setBottom(max(rect.bottom(), bb.bottom()));
+        rect.setTop(min(rect.top(), bb.top()));
+      }
+    }
+    rect.setLeft(rect.left() - 5);
+    rect.setRight(rect.right() + 5);
+    rect.setBottom(rect.bottom() + 5);
+    rect.setTop(rect.top() - 5);
+    scene->setSceneRect(rect);
+    setScene(scene);
   }
 }
 

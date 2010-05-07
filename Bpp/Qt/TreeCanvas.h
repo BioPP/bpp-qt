@@ -128,7 +128,7 @@ class TreeCanvas:
     virtual QtGraphicDevice& getDevice() { return device_; }
     virtual const QtGraphicDevice& getDevice() const { return device_; }
 
-    virtual void redraw() const;
+    virtual void redraw();
 
     virtual void setDrawingSize(unsigned int width, unsigned int height)
     {
