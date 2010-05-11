@@ -91,9 +91,11 @@ class QtGraphicDevice:
     
     void comment(const std::string& comment) {}
 
-  protected:
+  public:
     int xpos(double x) const { return static_cast<int>(round(x_(x))); }
     int ypos(double y) const { return static_cast<int>(round(y_(y))); }
+    double revx(int xpos) const { return revx_(static_cast<double>(xpos)); }
+    double revy(int ypos) const { return revy_(static_cast<double>(ypos)); }
 
  
 };

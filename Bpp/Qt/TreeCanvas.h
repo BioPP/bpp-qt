@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _TREECANVAS_H_
 
 #include "QtGraphicDevice.h"
+#include "MouseListener.h"
 
 //From the STL:
 #include <vector>
@@ -50,12 +51,37 @@ knowledge of the CeCILL license and that you accept its terms.
 //From PhylLib:
 #include <Phyl/Tree.h>
 #include <Phyl/TreeDrawing.h>
+#include <Phyl/AbstractTreeDrawing.h>
 
 //From Qt:
 #include <QGraphicsView>
 
 namespace bpp
 {
+
+class TreeCanvas;
+
+class NodeMouseEvent:
+  public QMouseEvent
+{
+  private:
+    bool hasNode_;
+    int nodeId_;
+
+  public:
+    NodeMouseEvent(const TreeCanvas& treeCanvas, const QMouseEvent& event);
+
+    bool hasNodeId() const { return hasNode_; }
+
+    int getNodeId() const throw (NodeNotFoundException)
+    {
+      if (!hasNode_)
+        throw NodeNotFoundException("NodeMouseEvent::getNodeId().", "");
+      else
+        return nodeId_;
+    }
+
+};
 
 /**
  * @brief Panel for plotting phylogenetic trees.
@@ -74,6 +100,8 @@ class TreeCanvas:
     std::vector<std::string> drawableProperties_;
     unsigned int drawingWidth_;
     unsigned int drawingHeight_;
+    NodeClickableAreasTreeDrawingListener nodeClickableAreaListener_;
+    MouseListenerGroup mouseListenerGroup_;
 
   public:
     TreeCanvas(QWidget* parent = 0);
@@ -91,7 +119,8 @@ class TreeCanvas:
     {
       if (treeDrawing_ != defaultTreeDrawing_)
         delete treeDrawing_;
-      treeDrawing_ = dynamic_cast<TreeDrawing *>(treeDrawing.clone());
+      treeDrawing_ = dynamic_cast<TreeDrawing*>(treeDrawing.clone());
+      treeDrawing_->addTreeDrawingListener(&nodeClickableAreaListener_);
       treeDrawing_->setTree(currentTree_);
       if (repaint) this->repaint();
     }
@@ -123,7 +152,7 @@ class TreeCanvas:
     }
 
     virtual TreeDrawing* getTreeDrawing() { return treeDrawing_; }
-    virtual const TreeDrawing* GetTreeDrawing() const { return treeDrawing_; }
+    virtual const TreeDrawing* getTreeDrawing() const { return treeDrawing_; }
 
     virtual QtGraphicDevice& getDevice() { return device_; }
     virtual const QtGraphicDevice& getDevice() const { return device_; }
@@ -139,6 +168,45 @@ class TreeCanvas:
 
     virtual unsigned int drawingWidth() const { return drawingWidth_; }
     virtual unsigned int drawingHeight() const { return drawingHeight_; }
+
+    void showNodeClickableAreas(bool yn) { nodeClickableAreaListener_.enable(yn); }
+    bool areNodeClickableAreasShown() const { return nodeClickableAreaListener_.isEnabled(); }
+
+    /**
+     * @name Mouse handling functions.
+     *
+     * @{
+     */
+    void addMouseListener(MouseListener* listener)
+    {
+      mouseListenerGroup_.addMouseListener(listener);
+    }
+
+  protected:
+  
+    void mouseDoubleClickEvent(QMouseEvent* event)
+    {
+      std::auto_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+      mouseListenerGroup_.processMouseDoubleClickEvent(newEvent.get());
+    }
+
+    void mouseMoveEvent(QMouseEvent* event)
+    {
+      std::auto_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+      mouseListenerGroup_.processMouseMoveEvent(newEvent.get());
+    }
+    void mousePressEvent(QMouseEvent* event)
+    {
+      std::auto_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+      mouseListenerGroup_.processMousePressEvent(newEvent.get());
+    }
+
+    void mouseReleaseEvent(QMouseEvent* event)
+    {
+      std::auto_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+      mouseListenerGroup_.processMouseReleaseEvent(newEvent.get());
+    }
+    /** @} */
 
 };
 

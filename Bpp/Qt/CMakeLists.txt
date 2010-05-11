@@ -14,6 +14,8 @@ set(H_FILES
   QtGraphicDevice.h
   QtTools.h
   QtOutputStream.h
+  MouseListener.h
+  MouseListeningWidget.h
   TreeCanvas.h
   )
 set(H_MOC_FILES

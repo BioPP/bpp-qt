@@ -47,14 +47,32 @@ using namespace bpp;
 #include <iostream>
 using namespace std;
 
+NodeMouseEvent::NodeMouseEvent(const TreeCanvas& treeCanvas, const QMouseEvent& event):
+  QMouseEvent(event), hasNode_(false), nodeId_(0)
+{
+  QPointF scenePos = treeCanvas.mapToScene(event.pos());
+  Point2D<double> pos(
+      treeCanvas.getDevice().revx(scenePos.x()),
+      treeCanvas.getDevice().revy(scenePos.y()));
+  try {
+    nodeId_ = treeCanvas.getTreeDrawing()->getNodeAt(pos);
+    hasNode_ = true;
+  } catch (std::exception& e) {
+    hasNode_ = false;
+  }
+}
+
 TreeCanvas::TreeCanvas(QWidget* parent) :
   QGraphicsView(parent),
   currentTree_(0),
   device_(),
   drawingWidth_(600),
-  drawingHeight_(800)
+  drawingHeight_(800),
+  nodeClickableAreaListener_(true),
+  mouseListenerGroup_()
 {
   defaultTreeDrawing_ = new CladogramPlot();
+  defaultTreeDrawing_->addTreeDrawingListener(&nodeClickableAreaListener_);
   treeDrawing_ = defaultTreeDrawing_;
 }
 
@@ -69,6 +87,7 @@ void TreeCanvas::redraw()
     for (unsigned int i = 0; i < drawableProperties_.size(); i++) {
       treeDrawing_->drawProperty(device_, drawableProperties_[i]);
     }
+    
     device_.end();
     QGraphicsScene* scene = &device_.getScene();
     

@@ -157,7 +157,7 @@ void TreeCanvasControlers::applyOptions(TreeCanvas* canvas) const
   treeDrawing->setHorizontalOrientation(orientationLeftRight_->checkedId() == 1 ? AbstractDendrogramPlot::ORIENTATION_LEFT_TO_RIGHT : AbstractDendrogramPlot::ORIENTATION_RIGHT_TO_LEFT);
   treeDrawing->setVerticalOrientation(orientationUpDown_->checkedId() == 3 ? AbstractDendrogramPlot::ORIENTATION_TOP_TO_BOTTOM : AbstractDendrogramPlot::ORIENTATION_BOTTOM_TO_TOP);
 
-//  canvas->setDrawProperty();
+  canvas->showNodeClickableAreas(drawClickableAreas_->isChecked());
   canvas->setDrawProperty(AbstractDendrogramPlot::PROPERTY_IDS, drawNodesId_->isChecked());
 //  canvas->showLeavesNames(drawLeavesNames_->isChecked());
   canvas->setDrawProperty(AbstractDendrogramPlot::PROPERTY_BRLEN, drawBranchLengthValues_->isChecked());
@@ -202,7 +202,7 @@ void TreeCanvasControlers::actualizeOptions()
   else  
     orientationUpDown_->buttons()[1]->setChecked(true);
   
-  //drawClickableAreas_    ->setChecked(treeCanvas_->showClickableAreas());
+  drawClickableAreas_    ->setChecked(treeCanvas_->areNodeClickableAreasShown());
   drawNodesId_           ->setChecked(treeCanvas_->isPropertyDrawn(AbstractDendrogramPlot::PROPERTY_IDS));
   //drawLeavesNames_       ->setChecked(treeCanvas_->showLeavesNames());
   drawBranchLengthValues_->setChecked(treeCanvas_->isPropertyDrawn(AbstractDendrogramPlot::PROPERTY_BRLEN));
