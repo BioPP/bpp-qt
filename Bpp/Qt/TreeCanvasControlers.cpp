@@ -45,25 +45,42 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
+void NodeClickableAreasTreeDrawingListener::afterDrawNode(const DrawNodeEvent& event)
+{
+  const TreeDrawing* td = event.getTreeDrawing();
+  double r = td->getDisplaySettings()->pointArea;
+  GraphicDevice* gd = event.getGraphicDevice();
+  Cursor cursor     = event.getCursor();
+  gd->drawRect(cursor.getX() - r, cursor.getY() - r, 2 * r, 2 * r);
+}
+
 const int TreeCanvasControlers::ID_WIDTH_CTRL                 = 1;
 const int TreeCanvasControlers::ID_HEIGHT_CTRL                = 2;
 const int TreeCanvasControlers::ID_DRAWING_CTRL               = 3;
 const int TreeCanvasControlers::ID_ORIENTATION_CTRL           = 4;
 const int TreeCanvasControlers::ID_DRAW_CLICKABLE_AREAS_CTRL  = 5;
-const int TreeCanvasControlers::ID_DRAW_NODES_ID_CTRL         = 6;
-const int TreeCanvasControlers::ID_DRAW_LEAVES_NAMES_CTRL     = 7;
-const int TreeCanvasControlers::ID_DRAW_BRLEN_VALUES_CTRL     = 8;
+const int TreeCanvasControlers::ID_DRAW_NODE_IDS_CTRL         = 6;
+const int TreeCanvasControlers::ID_DRAW_LEAF_NAMES_CTRL     = 7;
+const int TreeCanvasControlers::ID_DRAW_BRANCH_LENGTHS_CTRL     = 8;
 const int TreeCanvasControlers::ID_DRAW_BOOTSTRAP_VALUES_CTRL = 9;
+const std::string TreeCanvasControlers::PROPERTY_CLICKABLE_AREA       = "Clickable area";
 
 TreeCanvasControlers::TreeCanvasControlers(QWidget* parent): treeCanvas_(0)
 {
-  //Drawing algorithms:
+  //Drawing algorithms and controler:
+  tdSettings_ = new TreeDrawingSettings();
   phylogram_ = new PhylogramPlot();
   cladogram_ = new CladogramPlot();
+  phylogram_->setDisplaySettings(tdSettings_);
+  cladogram_->setDisplaySettings(tdSettings_);
   availableTreeDrawings_.append(QString(cladogram_->getName().c_str()));
   availableTreeDrawings_.append(QString(phylogram_->getName().c_str()));
+  tdDisplayControler_ = new BasicTreeDrawingDisplayControler(tdSettings_);
+  tdDisplayControler_->addListener(PROPERTY_CLICKABLE_AREA, reinterpret_cast<TreeDrawingListener*>(new NodeClickableAreasTreeDrawingListener(true)));
+  tdDisplayControler_->registerTreeDrawing(phylogram_);
+  tdDisplayControler_->registerTreeDrawing(cladogram_);
   
-  //TreeDrawing alogrithm choice and options:
+  //TreeDrawing algorithm choice and options:
   widthCtrl_   = new QSpinBox(parent);
   widthCtrl_->setRange(100, 10000);
   connect(widthCtrl_, SIGNAL(valueChanged(int)), this, SLOT(treeDrawingUnitChanged()));
@@ -107,6 +124,7 @@ TreeCanvasControlers::TreeCanvasControlers(QWidget* parent): treeCanvas_(0)
   connect(drawLeavesNames_       , SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
   connect(drawBranchLengthValues_, SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
   connect(drawBootstrapValues_   , SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
+  drawLeavesNames_->setChecked(true);
   
   blockSignal_ = false;
   actualizeOptions();
@@ -125,6 +143,8 @@ TreeCanvasControlers::~TreeCanvasControlers()
   delete drawBootstrapValues_;
   delete phylogram_;
   delete cladogram_;
+  delete tdSettings_;
+  delete tdDisplayControler_;
 }
 
 
@@ -157,11 +177,11 @@ void TreeCanvasControlers::applyOptions(TreeCanvas* canvas) const
   treeDrawing->setHorizontalOrientation(orientationLeftRight_->checkedId() == 1 ? AbstractDendrogramPlot::ORIENTATION_LEFT_TO_RIGHT : AbstractDendrogramPlot::ORIENTATION_RIGHT_TO_LEFT);
   treeDrawing->setVerticalOrientation(orientationUpDown_->checkedId() == 3 ? AbstractDendrogramPlot::ORIENTATION_TOP_TO_BOTTOM : AbstractDendrogramPlot::ORIENTATION_BOTTOM_TO_TOP);
 
-  canvas->showNodeClickableAreas(drawClickableAreas_->isChecked());
-  canvas->setDrawProperty(AbstractDendrogramPlot::PROPERTY_IDS, drawNodesId_->isChecked());
-//  canvas->showLeavesNames(drawLeavesNames_->isChecked());
-  canvas->setDrawProperty(AbstractDendrogramPlot::PROPERTY_BRLEN, drawBranchLengthValues_->isChecked());
-  canvas->setDrawProperty(AbstractDendrogramPlot::PROPERTY_BOOTSTRAP, drawBootstrapValues_->isChecked());
+  tdDisplayControler_->enableListener(PROPERTY_CLICKABLE_AREA, drawClickableAreas_->isChecked());
+  tdDisplayControler_->enableListener(BasicTreeDrawingDisplayControler::PROPERTY_NODE_IDS, drawNodesId_->isChecked());
+  tdDisplayControler_->enableListener(BasicTreeDrawingDisplayControler::PROPERTY_LEAF_NAMES, drawLeavesNames_->isChecked());
+  tdDisplayControler_->enableListener(BasicTreeDrawingDisplayControler::PROPERTY_BRANCH_LENGTHS, drawBranchLengthValues_->isChecked());
+  tdDisplayControler_->enableListener(BasicTreeDrawingDisplayControler::PROPERTY_BOOTSTRAP_VALUES, drawBootstrapValues_->isChecked());
 
   //Refresh the drawing:
   canvas->redraw();
@@ -202,11 +222,11 @@ void TreeCanvasControlers::actualizeOptions()
   else  
     orientationUpDown_->buttons()[1]->setChecked(true);
   
-  drawClickableAreas_    ->setChecked(treeCanvas_->areNodeClickableAreasShown());
-  drawNodesId_           ->setChecked(treeCanvas_->isPropertyDrawn(AbstractDendrogramPlot::PROPERTY_IDS));
-  //drawLeavesNames_       ->setChecked(treeCanvas_->showLeavesNames());
-  drawBranchLengthValues_->setChecked(treeCanvas_->isPropertyDrawn(AbstractDendrogramPlot::PROPERTY_BRLEN));
-  drawBootstrapValues_   ->setChecked(treeCanvas_->isPropertyDrawn(AbstractDendrogramPlot::PROPERTY_BOOTSTRAP));
+  drawClickableAreas_    ->setChecked(tdDisplayControler_->isListenerEnabled(PROPERTY_CLICKABLE_AREA));
+  drawNodesId_           ->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_NODE_IDS));
+  drawLeavesNames_       ->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_LEAF_NAMES));
+  drawBranchLengthValues_->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_BRANCH_LENGTHS));
+  drawBootstrapValues_   ->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_BOOTSTRAP_VALUES));
   blockSignal_ = false;
 }
 
@@ -217,9 +237,9 @@ QWidget* TreeCanvasControlers::getControlerById(int id)
   if (id == ID_DRAWING_CTRL)               return drawingCtrl_;
   if (id == ID_ORIENTATION_CTRL)           return orientationCtrl_;
   if (id == ID_DRAW_CLICKABLE_AREAS_CTRL)  return drawClickableAreas_;
-  if (id == ID_DRAW_NODES_ID_CTRL)         return drawNodesId_;
-  if (id == ID_DRAW_LEAVES_NAMES_CTRL)     return drawLeavesNames_;
-  if (id == ID_DRAW_BRLEN_VALUES_CTRL)     return drawBranchLengthValues_;
+  if (id == ID_DRAW_NODE_IDS_CTRL)         return drawNodesId_;
+  if (id == ID_DRAW_LEAF_NAMES_CTRL)       return drawLeavesNames_;
+  if (id == ID_DRAW_BRANCH_LENGTHS_CTRL)   return drawBranchLengthValues_;
   if (id == ID_DRAW_BOOTSTRAP_VALUES_CTRL) return drawBootstrapValues_;
   return 0;
 }

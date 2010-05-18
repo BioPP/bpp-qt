@@ -68,11 +68,9 @@ TreeCanvas::TreeCanvas(QWidget* parent) :
   device_(),
   drawingWidth_(600),
   drawingHeight_(800),
-  nodeClickableAreaListener_(true),
   mouseListenerGroup_()
 {
   defaultTreeDrawing_ = new CladogramPlot();
-  defaultTreeDrawing_->addTreeDrawingListener(&nodeClickableAreaListener_);
   treeDrawing_ = defaultTreeDrawing_;
 }
 
@@ -83,18 +81,14 @@ void TreeCanvas::redraw()
     device_.begin();
     treeDrawing_->setXUnit(static_cast<double>(drawingWidth()) / treeDrawing_->getWidth());
     treeDrawing_->setYUnit(static_cast<double>(drawingHeight()) / treeDrawing_->getHeight());
-    treeDrawing_->plot(device_);
-    for (unsigned int i = 0; i < drawableProperties_.size(); i++) {
-      treeDrawing_->drawProperty(device_, drawableProperties_[i]);
-    }
-    
+    treeDrawing_->plot(device_);    
     device_.end();
     QGraphicsScene* scene = &device_.getScene();
     
-    //Need to do that because line have can have a bounding box width null dimension.
+    //Need to do that because line have can have a bounding box with null dimension.
     QRectF rect;
     QList<QGraphicsItem*> items = scene->items();
-    for(int i = 0; i < items.size(); i++) {
+    for (int i = 0; i < items.size(); i++) {
       QRectF bb = items[i]->boundingRegion(items[i]->sceneTransform()).boundingRect();
       if (i == 0) rect = bb;
       else {
@@ -117,6 +111,20 @@ void TreeCanvas::setTree(const Tree* tree)
 {
   currentTree_ = tree;
   treeDrawing_->setTree(tree);
+  nodeCollapsed_.clear();
   redraw();
+}
+
+void TreeCanvas::setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint)
+{
+  if (treeDrawing_ != defaultTreeDrawing_)
+    delete treeDrawing_;
+  treeDrawing_ = dynamic_cast<TreeDrawing*>(treeDrawing.clone());
+  treeDrawing_->setTree(currentTree_);
+  vector<int> ids = currentTree_->getNodesId();
+  for (unsigned int i = 0; i < ids.size(); i++) {
+    treeDrawing_->collapseNode(ids[i], nodeCollapsed_[ids[i]]);
+  }
+  if (repaint) this->repaint();
 }
 

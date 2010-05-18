@@ -46,6 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 //From Phylib:
 #include <Phyl/CladogramPlot.h>
 #include <Phyl/PhylogramPlot.h>
+#include <Phyl/TreeDrawingDisplayControler.h>
 
 //From Qt:
 #include <QSpinBox>
@@ -56,6 +57,27 @@ knowledge of the CeCILL license and that you accept its terms.
 
 namespace bpp
 {
+
+/**
+ * @brief A TreeDrawingListener implementation that draw the clickable areas around nodes.
+ *
+ * This listener works with TreeDrawing classes, but is more efficient when used with a class that fires DrawINodeEvent events.
+ */
+class NodeClickableAreasTreeDrawingListener :
+  public TreeDrawingListenerAdapter
+{
+public:
+  NodeClickableAreasTreeDrawingListener(bool autonomous = false) :
+    TreeDrawingListenerAdapter(autonomous) {}
+
+  NodeClickableAreasTreeDrawingListener* clone() const { return new NodeClickableAreasTreeDrawingListener(*this); }
+
+public :    
+  void afterDrawNode(const DrawNodeEvent& event);
+
+};
+
+
 
 /**
  * @brief Manage controlers widgets to interact with a tree canvas.
@@ -85,6 +107,8 @@ class TreeCanvasControlers:
     CladogramPlot* cladogram_;
     PhylogramPlot* phylogram_;
     QStringList availableTreeDrawings_;
+    TreeDrawingSettings* tdSettings_;
+    TreeDrawingDisplayControler* tdDisplayControler_;
     
     // Other controls may be added later.
     
@@ -136,10 +160,11 @@ class TreeCanvasControlers:
     static const int ID_DRAWING_CTRL;
     static const int ID_ORIENTATION_CTRL;
     static const int ID_DRAW_CLICKABLE_AREAS_CTRL;
-    static const int ID_DRAW_NODES_ID_CTRL;
-    static const int ID_DRAW_LEAVES_NAMES_CTRL;
-    static const int ID_DRAW_BRLEN_VALUES_CTRL;
+    static const int ID_DRAW_NODE_IDS_CTRL;
+    static const int ID_DRAW_LEAF_NAMES_CTRL;
+    static const int ID_DRAW_BRANCH_LENGTHS_CTRL;
     static const int ID_DRAW_BOOTSTRAP_VALUES_CTRL;
+    static const std::string PROPERTY_CLICKABLE_AREA;
 
 };
 

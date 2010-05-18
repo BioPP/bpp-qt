@@ -45,6 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 //From the STL:
 #include <vector>
+#include <map>
 #include <string>
 #include <algorithm>
 
@@ -97,11 +98,10 @@ class TreeCanvas:
     TreeDrawing* treeDrawing_;
     TreeDrawing* defaultTreeDrawing_;
     mutable QtGraphicDevice device_;
-    std::vector<std::string> drawableProperties_;
     unsigned int drawingWidth_;
     unsigned int drawingHeight_;
-    NodeClickableAreasTreeDrawingListener nodeClickableAreaListener_;
     MouseListenerGroup mouseListenerGroup_;
+    mutable std::map<int, bool> nodeCollapsed_;
 
   public:
     TreeCanvas(QWidget* parent = 0);
@@ -115,41 +115,7 @@ class TreeCanvas:
     
     virtual const Tree* getTree() const { return currentTree_; }
 
-    virtual void setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint = true)
-    {
-      if (treeDrawing_ != defaultTreeDrawing_)
-        delete treeDrawing_;
-      treeDrawing_ = dynamic_cast<TreeDrawing*>(treeDrawing.clone());
-      treeDrawing_->addTreeDrawingListener(&nodeClickableAreaListener_);
-      treeDrawing_->setTree(currentTree_);
-      if (repaint) this->repaint();
-    }
-
-    virtual void setDrawPropertyOn(const std::string& property)
-    {
-      if (std::find(drawableProperties_.begin(), drawableProperties_.end(), property) == drawableProperties_.end())
-        drawableProperties_.push_back(property);
-    }
-    
-    virtual void setDrawPropertyOff(const std::string& property)
-    {
-      std::vector<std::string>::iterator it = std::find(drawableProperties_.begin(), drawableProperties_.end(), property);
-      if (it != drawableProperties_.end())
-        drawableProperties_.erase(it);
-    }
-
-    virtual void setDrawProperty(const std::string& property, bool drawPpt)
-    {
-      if (drawPpt)
-        setDrawPropertyOn(property);
-      else
-        setDrawPropertyOff(property);
-    }
-
-    virtual bool isPropertyDrawn(const std::string& property) const
-    {
-      return std::find(drawableProperties_.begin(), drawableProperties_.end(), property) != drawableProperties_.end();
-    }
+    virtual void setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint = true);
 
     virtual TreeDrawing* getTreeDrawing() { return treeDrawing_; }
     virtual const TreeDrawing* getTreeDrawing() const { return treeDrawing_; }
@@ -169,8 +135,23 @@ class TreeCanvas:
     virtual unsigned int drawingWidth() const { return drawingWidth_; }
     virtual unsigned int drawingHeight() const { return drawingHeight_; }
 
-    void showNodeClickableAreas(bool yn) { nodeClickableAreaListener_.enable(yn); }
-    bool areNodeClickableAreasShown() const { return nodeClickableAreaListener_.isEnabled(); }
+    void collapseNode(int nodeId, bool tf) throw (NodeNotFoundException)
+    {
+      if (!currentTree_) return;
+      if (!currentTree_->hasNode(nodeId))
+        throw NodeNotFoundException("TreeCanvas::collapseNode.", nodeId);  
+      if (treeDrawing_)
+        treeDrawing_->collapseNode(nodeId, tf);
+      nodeCollapsed_[nodeId] = tf;
+    }
+
+    bool isNodeCollapsed(int nodeId) const throw (NodeNotFoundException)
+    {
+      if (!currentTree_) return false;
+      if (!currentTree_->hasNode(nodeId))
+        throw NodeNotFoundException("TreeCanvas::isNodeCollapsed.", nodeId);  
+      return nodeCollapsed_[nodeId];
+    }
 
     /**
      * @name Mouse handling functions.
