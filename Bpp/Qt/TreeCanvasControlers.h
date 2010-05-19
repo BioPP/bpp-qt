@@ -79,6 +79,13 @@ public :
 
 
 
+
+class TreeCanvasControlersListener
+{
+  public:
+    virtual void controlerTakesAction() = 0;
+};
+
 /**
  * @brief Manage controlers widgets to interact with a tree canvas.
  */
@@ -111,6 +118,8 @@ class TreeCanvasControlers:
     TreeDrawingDisplayControler* tdDisplayControler_;
     
     // Other controls may be added later.
+
+    std::vector<TreeCanvasControlersListener*> listeners_;
     
     bool blockSignal_;
     
@@ -148,7 +157,19 @@ class TreeCanvasControlers:
 
     unsigned int getNumberOfTreeDrawings() const { return 2; }
 
-    void applyOptions(TreeCanvas* canvas) const;
+    void applyOptions(TreeCanvas* canvas);
+
+    void addActionListener(TreeCanvasControlersListener* listener)
+    {
+      listeners_.push_back(listener);
+    }
+
+  protected:
+    void fireActionEvent_()
+    {
+      for (unsigned int i = 0; i < listeners_.size(); ++i)
+        listeners_[i]->controlerTakesAction();
+    }
 
   private slots:
     void treeDrawingChanged();

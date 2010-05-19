@@ -158,7 +158,7 @@ void TreeCanvasControlers::setTreeCanvas(TreeCanvas* canvas, bool updateOptions)
 
 
 
-void TreeCanvasControlers::applyOptions(TreeCanvas* canvas) const
+void TreeCanvasControlers::applyOptions(TreeCanvas* canvas)
 {
   QString selection = drawingCtrl_->currentText();
   if (QString(canvas->getTreeDrawing()->getName().c_str()) != selection)
@@ -183,8 +183,8 @@ void TreeCanvasControlers::applyOptions(TreeCanvas* canvas) const
   tdDisplayControler_->enableListener(BasicTreeDrawingDisplayControler::PROPERTY_BRANCH_LENGTHS, drawBranchLengthValues_->isChecked());
   tdDisplayControler_->enableListener(BasicTreeDrawingDisplayControler::PROPERTY_BOOTSTRAP_VALUES, drawBootstrapValues_->isChecked());
 
-  //Refresh the drawing:
-  canvas->redraw();
+  //Refresh the drawing(s):
+  fireActionEvent_();
 }
 
 
@@ -222,11 +222,12 @@ void TreeCanvasControlers::actualizeOptions()
   else  
     orientationUpDown_->buttons()[1]->setChecked(true);
   
-  drawClickableAreas_    ->setChecked(tdDisplayControler_->isListenerEnabled(PROPERTY_CLICKABLE_AREA));
-  drawNodesId_           ->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_NODE_IDS));
-  drawLeavesNames_       ->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_LEAF_NAMES));
-  drawBranchLengthValues_->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_BRANCH_LENGTHS));
-  drawBootstrapValues_   ->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_BOOTSTRAP_VALUES));
+  //Not needed as all canvasses share the same controler:
+  //drawClickableAreas_    ->setChecked(tdDisplayControler_->isListenerEnabled(PROPERTY_CLICKABLE_AREA));
+  //drawNodesId_           ->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_NODE_IDS));
+  //drawLeavesNames_       ->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_LEAF_NAMES));
+  //drawBranchLengthValues_->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_BRANCH_LENGTHS));
+  //drawBootstrapValues_   ->setChecked(tdDisplayControler_->isListenerEnabled(BasicTreeDrawingDisplayControler::PROPERTY_BOOTSTRAP_VALUES));
   blockSignal_ = false;
 }
 
