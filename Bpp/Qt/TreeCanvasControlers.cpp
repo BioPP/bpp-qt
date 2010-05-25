@@ -82,10 +82,10 @@ TreeCanvasControlers::TreeCanvasControlers(QWidget* parent): treeCanvas_(0)
   
   //TreeDrawing algorithm choice and options:
   widthCtrl_   = new QSpinBox(parent);
-  widthCtrl_->setRange(100, 10000);
+  widthCtrl_->setRange(100, 100000);
   connect(widthCtrl_, SIGNAL(valueChanged(int)), this, SLOT(treeDrawingUnitChanged()));
   heightCtrl_  = new QSpinBox(parent);  
-  heightCtrl_->setRange(100, 10000);
+  heightCtrl_->setRange(100, 100000);
   connect(heightCtrl_, SIGNAL(valueChanged(int)), this, SLOT(treeDrawingUnitChanged()));
   drawingCtrl_ = new QComboBox(parent);
   drawingCtrl_->addItems(availableTreeDrawings_);
