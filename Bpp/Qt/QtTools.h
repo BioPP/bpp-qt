@@ -44,6 +44,10 @@ knowledge of the CeCILL license and that you accept its terms.
 //From Utils:
 #include <Utils/RGBColor.h>
 #include <Utils/Font.h>
+#include <Utils/BppString.h>
+#include <Utils/Number.h>
+
+//From Qt:
 #include <QColor>
 #include <QFont>
 
@@ -59,9 +63,25 @@ class QtTools
 {
 public:
 
-  static QString toQt(const std::string& str)
+  static QString toQt(const char* str)
+  {
+    return QString(str);
+  }
+
+   static QString toQt(const std::string& str)
   {
     return QString(str.c_str());
+  }
+
+  static QString toQt(const BppString& str)
+  {
+    return QString(str.toSTL().c_str());
+  }
+
+  template<class T>
+  static QString toQt(const Number<T>& number)
+  {
+    return toQt(TextTools::toString(number.getValue()));
   }
 
   static QColor toQt(const RGBColor& color)
