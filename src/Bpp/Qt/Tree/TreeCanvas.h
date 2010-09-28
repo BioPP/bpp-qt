@@ -40,8 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _TREECANVAS_H_
 #define _TREECANVAS_H_
 
-#include "QtGraphicDevice.h"
-#include "MouseListener.h"
+#include "../QtGraphicDevice.h"
+#include "../MouseListener.h"
 
 //From the STL:
 #include <vector>
@@ -50,9 +50,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <algorithm>
 
 //From PhylLib:
-#include <Phyl/Tree.h>
-#include <Phyl/TreeDrawing.h>
-#include <Phyl/AbstractTreeDrawing.h>
+#include <Bpp/Phyl/Tree.h>
+#include <Bpp/Phyl/Graphics/TreeDrawing.h>
+#include <Bpp/Phyl/Graphics/AbstractTreeDrawing.h>
 
 //From Qt:
 #include <QGraphicsView>

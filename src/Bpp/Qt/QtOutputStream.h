@@ -43,8 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "QtTools.h"
 
-//From Utils:
-#include <Utils/OutputStream.h>
+#include <Bpp/Io/OutputStream.h>
 
 //From Qt:
 #include <QPainter>

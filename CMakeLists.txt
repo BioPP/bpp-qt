@@ -68,10 +68,9 @@ MACRO(IMPROVED_FIND_LIBRARY OUTPUT_LIBS lib_name include_to_find)
 ENDMACRO(IMPROVED_FIND_LIBRARY)
 
 #Find the Bio++ libraries:
-IMPROVED_FIND_LIBRARY(LIBS bpp-phyl Phyl/Tree.h)
-IMPROVED_FIND_LIBRARY(LIBS bpp-seq Seq/Alphabet.h)
-IMPROVED_FIND_LIBRARY(LIBS bpp-numcalc NumCalc/NumTools.h)
-IMPROVED_FIND_LIBRARY(LIBS bpp-utils Utils/Clonable.h)
+IMPROVED_FIND_LIBRARY(LIBS bpp-phyl Bpp/Phyl/Tree.h)
+IMPROVED_FIND_LIBRARY(LIBS bpp-seq Bpp/Seq/Alphabet/Alphabet.h)
+IMPROVED_FIND_LIBRARY(LIBS bpp-core Bpp/Clonable.h)
 
 # Find the Qt installation
 FIND_PACKAGE(Qt4 REQUIRED)
@@ -79,7 +78,7 @@ INCLUDE(${QT_USE_FILE})
 SET(LIBS ${LIBS} ${QT_LIBRARIES})
 
 # Subdirectories
-ADD_SUBDIRECTORY(Bpp/Qt)
+ADD_SUBDIRECTORY(src)
 
 # Doxygen
 FIND_PACKAGE(Doxygen)
@@ -95,33 +94,26 @@ SET(CPACK_PACKAGE_VERSION_MAJOR "1")
 SET(CPACK_PACKAGE_VERSION_MINOR "0")
 SET(CPACK_PACKAGE_VERSION_PATCH "0")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Bio++ Qt graphic library")
-SET(CPACK_RESOURCE_FILE_LICENSE "COPYING")
-SET(CPACK_RESOURCE_FILE_AUTHORS "AUTHORS")
-SET(CPACK_GENERATOR "DEB;RPM")
+SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
+SET(CPACK_RESOURCE_FILE_AUTHORS "${CMAKE_SOURCE_DIR}/AUTHORS")
 SET(CPACK_SOURCE_GENERATOR "TGZ")
-SET(CPACK_SYSTEM_NAME x86_64)
-SET(CPACK_TOPLEVEL_TAG x86_64)
-SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE amd64)
-SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libstdc++6, libbpp-utils (= 1.4.0), libbpp-numcalc (= 1.7.0), libbpp-seq (= 1.6.0), libbpp-phyl (= 1.8.0)")
-SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Julien Dutheil <jdutheil@birc.au.dk>")
 SET(CPACK_SOURCE_IGNORE_FILES
- ".*CMakeFiles"
- ".*Makefile"
- ".*_CPack_Packages"
- ".*CMakeCache.txt"
- "debian/"
- "Phyl.spec"
+ "CMakeFiles"
+ "Makefile"
+ "_CPack_Packages"
+ "CMakeCache.txt"
  ".*\\\\.cmake"
- ".*CVS/"
- ".*.gz"
- ".*.deb"
- ".*.rpm"
- ".*~"
- "Phyl/\\\\..*"
+ ".*\\\\.svn"
+ ".*\\\\.gz"
+ ".*\\\\.deb"
+ ".*\\\\.rpm"
+ "\\\\..*\\\\.swp"
+ "src/\\\\..*"
+ "src/libbpp*"
+ "debian/libbpp*"
+ "debian/tmp"
  "html"
- "Phyl.tag"
- "autogen.sh"
- "autoclean.sh"
+ "Qt.tag"
  ${CPACK_SOURCE_IGNORE_FILES}
 )
 SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
@@ -129,3 +121,14 @@ INCLUDE(CPack)
 
 #This adds the 'dist' target
 ADD_CUSTOM_TARGET(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+
+IF (UNIX)
+#This creates deb packages:
+ADD_CUSTOM_TARGET(deb fakeroot debian/rules binary)
+ADD_DEPENDENCIES(deb dist)
+
+#This creates rpm packages:
+ADD_CUSTOM_TARGET(rpm rpmbuild -ta ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
+ADD_DEPENDENCIES(rpm dist)
+
+ENDIF()

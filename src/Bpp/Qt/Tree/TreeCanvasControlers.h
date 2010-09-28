@@ -44,9 +44,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "TreeCanvas.h"
 
 //From Phylib:
-#include <Phyl/CladogramPlot.h>
-#include <Phyl/PhylogramPlot.h>
-#include <Phyl/TreeDrawingDisplayControler.h>
+#include <Bpp/Phyl/Graphics/CladogramPlot.h>
+#include <Bpp/Phyl/Graphics/PhylogramPlot.h>
+#include <Bpp/Phyl/Graphics/TreeDrawingDisplayControler.h>
 
 //From Qt:
 #include <QSpinBox>

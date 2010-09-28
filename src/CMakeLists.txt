@@ -4,23 +4,23 @@
 
 # File list
 set(CPP_FILES
-  QtGraphicDevice.cpp
-  QtOutputStream.cpp
-  TreeCanvas.cpp
-  TreeCanvasControlers.cpp
-  TreeStatisticsBox.cpp
+  Bpp/Qt/QtGraphicDevice.cpp
+  Bpp/Qt/QtOutputStream.cpp
+  Bpp/Qt/Tree/TreeCanvas.cpp
+  Bpp/Qt/Tree/TreeCanvasControlers.cpp
+  Bpp/Qt/Tree/TreeStatisticsBox.cpp
   )
 set(H_FILES
-  QtGraphicDevice.h
-  QtTools.h
-  QtOutputStream.h
-  MouseListener.h
-  MouseListeningWidget.h
-  TreeCanvas.h
+  Bpp/Qt/QtGraphicDevice.h
+  Bpp/Qt/QtTools.h
+  Bpp/Qt/QtOutputStream.h
+  Bpp/Qt/MouseListener.h
+  Bpp/Qt/MouseListeningWidget.h
+  Bpp/Qt/Tree/TreeCanvas.h
   )
 set(H_MOC_FILES
-  TreeCanvasControlers.h
-  TreeStatisticsBox.h
+  Bpp/Qt/Tree/TreeCanvasControlers.h
+  Bpp/Qt/Tree/TreeStatisticsBox.h
   )
 qt4_wrap_cpp(CPP_MOC_FILES ${H_MOC_FILES})
 
@@ -46,4 +46,4 @@ target_link_libraries(bppqt-shared ${LIBS})
 install(TARGETS bppqt-static bppqt-shared DESTINATION lib)
 
 # Install headers
-install(FILES ${H_FILES} ${H_MOC_FILES} DESTINATION include/Bpp/Qt)
+install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN ".svn" EXCLUDE PATTERN "*.h" PATTERN "*.all")

@@ -39,8 +39,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "TreeCanvas.h"
 #include <QGraphicsItem>
+
 //From PhyLib:
-#include <Phyl/CladogramPlot.h>
+#include <Bpp/Phyl/Graphics/CladogramPlot.h>
 
 using namespace bpp;
 

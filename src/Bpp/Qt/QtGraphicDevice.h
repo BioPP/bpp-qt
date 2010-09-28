@@ -41,7 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _QTGRAPHICDEVICE_H_
 #define _QTGRAPHICDEVICE_H_
 
-#include <Utils/AbstractGraphicDevice.h>
+#include <Bpp/Graphics/AbstractGraphicDevice.h>
 
 //From Qt:
 #include <QGraphicsScene>

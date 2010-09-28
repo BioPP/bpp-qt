@@ -1,5 +1,5 @@
 //
-// File: TreeStatisticsBox.cpp
+// File: TreeStatisticsBox.h
 // Created by: Julien Dutheil
 // Created on: Sun Aug 9 12:27 2009
 //
@@ -37,43 +37,47 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "TreeStatisticsBox.h"
+#ifndef _TREESTATISTICSBOX_H_
+#define _TREESTATISTICSBOX_H_
 
-//From Utils:
-#include <Utils/TextTools.h>
 
-//From NumCalc:
-#include <NumCalc/VectorTools.h>
+//From PhylLib:
+#include <Bpp/Phyl/PhyloStatistics.h>
 
 //From Qt:
-#include <QFormLayout>
+#include <QWidget>
+#include <QGroupBox>
+#include <QLabel>
 
-using namespace bpp;
-
-TreeStatisticsBox::TreeStatisticsBox(QWidget* parent):
-  QGroupBox(parent),
-  leavesNumber_(this),
-  ancestorsNumber_(this),
-  maxFurcation_(this),
-  depth_(this),
-  height_(this)
+namespace bpp
 {
-  QFormLayout* layout = new QFormLayout();
-  layout->addRow(tr("# Leaves:"), &leavesNumber_);
-  layout->addRow(tr("# Ancestors:"), &ancestorsNumber_);
-  layout->addRow(tr("Max n-furcation:"), &maxFurcation_);
-  layout->addRow(tr("Depth:"), &depth_);
-  layout->addRow(tr("Height:"), &height_);
-  setLayout(layout);
-}
 
-void TreeStatisticsBox::updateTree(const Tree& tree)
+/**
+ * @brief Panel that display a few statistics on a tree.
+ */
+class TreeStatisticsBox:
+  public QGroupBox
 {
-  stats_.setTree(tree);
-  leavesNumber_.setText(tr(TextTools::toString(stats_.getNumberOfLeaves()).c_str()));
-  ancestorsNumber_.setText(tr(TextTools::toString(stats_.getNumberOfAncestors()).c_str()));
-  maxFurcation_.setText(tr(TextTools::toString(VectorTools::max(stats_.getNodeNumberOfSons())).c_str()));
-  depth_.setText(tr(TextTools::toString(*stats_.getNodeDepths().rbegin()).c_str()));
-  height_.setText(tr(TextTools::toString(*stats_.getNodeHeights().rbegin()).c_str()));
-}
+  Q_OBJECT
+
+  protected:
+    PhyloStatistics stats_;
+    QLabel leavesNumber_;
+    QLabel ancestorsNumber_;
+    QLabel maxFurcation_;
+    QLabel depth_;
+    QLabel height_;
+
+  public:
+    TreeStatisticsBox(QWidget* parent = 0);
+    virtual ~TreeStatisticsBox() {}
+
+  public:
+    virtual void updateTree(const Tree& tree);
+    
+};
+
+} //end of namespace bpp.
+
+#endif //_TREESTATISTICSBOX_H_
 

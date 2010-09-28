@@ -40,8 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _MOUSELISTENER_H_
 #define _MOUSELISTENER_H_
 
-//From Utils:
-#include <Utils/Clonable.h>
+#include <Bpp/Clonable.h>
 
 //From the STL:
 #include <vector>

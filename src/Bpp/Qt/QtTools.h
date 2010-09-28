@@ -41,11 +41,10 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _QTTOOLS_H_
 #define _QTTOOLS_H_
 
-//From Utils:
-#include <Utils/RGBColor.h>
-#include <Utils/Font.h>
-#include <Utils/BppString.h>
-#include <Utils/Number.h>
+#include <Bpp/Graphics/RgbColor.h>
+#include <Bpp/Graphics/Font/Font.h>
+#include <Bpp/BppString.h>
+#include <Bpp/Numeric/Number.h>
 
 //From Qt:
 #include <QColor>
