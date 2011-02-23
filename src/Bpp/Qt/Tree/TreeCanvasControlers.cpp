@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 16, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
 This software is a computer program whose purpose is to provide
 graphic components to develop bioinformatics applications.
@@ -60,10 +60,10 @@ const int TreeCanvasControlers::ID_DRAWING_CTRL               = 3;
 const int TreeCanvasControlers::ID_ORIENTATION_CTRL           = 4;
 const int TreeCanvasControlers::ID_DRAW_CLICKABLE_AREAS_CTRL  = 5;
 const int TreeCanvasControlers::ID_DRAW_NODE_IDS_CTRL         = 6;
-const int TreeCanvasControlers::ID_DRAW_LEAF_NAMES_CTRL     = 7;
-const int TreeCanvasControlers::ID_DRAW_BRANCH_LENGTHS_CTRL     = 8;
+const int TreeCanvasControlers::ID_DRAW_LEAF_NAMES_CTRL       = 7;
+const int TreeCanvasControlers::ID_DRAW_BRANCH_LENGTHS_CTRL   = 8;
 const int TreeCanvasControlers::ID_DRAW_BOOTSTRAP_VALUES_CTRL = 9;
-const std::string TreeCanvasControlers::PROPERTY_CLICKABLE_AREA       = "Clickable area";
+const std::string TreeCanvasControlers::PROPERTY_CLICKABLE_AREA = "Clickable area";
 
 TreeCanvasControlers::TreeCanvasControlers(QWidget* parent): treeCanvas_(0)
 {

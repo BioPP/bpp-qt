@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 16, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
 This software is a computer program whose purpose is to provide
 graphic components to develop bioinformatics applications.
@@ -79,6 +79,7 @@ void TreeCanvas::redraw()
 {
   if (treeDrawing_ && treeDrawing_->hasTree())
   {
+    QPointF p = mapToScene(contentsRect().center());
     device_.begin();
     treeDrawing_->setXUnit(static_cast<double>(drawingWidth()) / treeDrawing_->getWidth());
     treeDrawing_->setYUnit(static_cast<double>(drawingHeight()) / treeDrawing_->getHeight());
@@ -105,6 +106,8 @@ void TreeCanvas::redraw()
     rect.setTop(rect.top() - 5);
     scene->setSceneRect(rect);
     setScene(scene);
+    centerOn(p);
+    emit drawingChanged();
   }
 }
 
@@ -126,6 +129,22 @@ void TreeCanvas::setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint)
   for (unsigned int i = 0; i < ids.size(); i++) {
     treeDrawing_->collapseNode(ids[i], nodeCollapsed_[ids[i]]);
   }
-  if (repaint) this->repaint();
+  if (repaint) {
+    this->repaint();
+  }
 }
 
+QList<QGraphicsTextItem*> TreeCanvas::searchText(const QString& text)
+{
+  QList<QGraphicsTextItem*> match;
+  QList<QGraphicsItem*> items = device_.getScene().items();
+  for (int i = 0; i < items.size(); ++i) {
+    QGraphicsTextItem* item = dynamic_cast<QGraphicsTextItem*>(items[i]);
+    if (item) {
+      if (item->toPlainText().indexOf(text) > -1) {
+        match.append(item);
+      }
+    } //Else not a text item
+  }
+  return match;
+}

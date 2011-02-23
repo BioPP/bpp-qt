@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 16, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
 This software is a computer program whose purpose is to provide
 graphic components to develop bioinformatics applications.
@@ -93,6 +93,8 @@ class NodeMouseEvent:
 class TreeCanvas:
   public QGraphicsView
 {
+  Q_OBJECT
+
   private:
     const Tree* currentTree_;
     TreeDrawing* treeDrawing_;
@@ -123,8 +125,6 @@ class TreeCanvas:
     virtual QtGraphicDevice& getDevice() { return device_; }
     virtual const QtGraphicDevice& getDevice() const { return device_; }
 
-    virtual void redraw();
-
     virtual void setDrawingSize(unsigned int width, unsigned int height)
     {
       drawingWidth_  = width;
@@ -154,6 +154,13 @@ class TreeCanvas:
     }
 
     /**
+     * @brief Loop for some text in the drawing and get the corresponding coordinates.
+     *
+     * @todo We might want to use some proper indexing for this function to work properly...
+     */
+    QList<QGraphicsTextItem*> searchText(const QString& text);
+
+    /**
      * @name Mouse handling functions.
      *
      * @{
@@ -162,6 +169,8 @@ class TreeCanvas:
     {
       mouseListenerGroup_.addMouseListener(listener);
     }
+
+    virtual void redraw();
 
   protected:
   
@@ -188,6 +197,9 @@ class TreeCanvas:
       mouseListenerGroup_.processMouseReleaseEvent(newEvent.get());
     }
     /** @} */
+
+  signals:
+    void drawingChanged();
 
 };
 

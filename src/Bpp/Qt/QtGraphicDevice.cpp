@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 16, 2006)
+Copyright or © or Copr. Bio++ Development Team, (November 16, 2006)
 
 This software is a computer program whose purpose is to provide 
 graphical components using the Qt library.
@@ -136,7 +136,7 @@ void QtGraphicDevice::drawText(double x, double y, const std::string& text, shor
   QGraphicsTextItem* item = scene_->addText(qtext, currentFont_);
   QSizeF fsize = item->document()->size();
   QFontInfo fi(currentFont_);
-  double mar = (fsize.rheight() - fi.pointSize()) / 2;
+  double mar = (fsize.rheight() - fi.pixelSize()) / 2;
   if (hpos ==  TEXT_HORIZONTAL_LEFT)
     xset = 0;
   else if (hpos ==  TEXT_HORIZONTAL_RIGHT)
@@ -145,15 +145,15 @@ void QtGraphicDevice::drawText(double x, double y, const std::string& text, shor
     xset = -fsize.rwidth() / 2;
   else throw UnvalidFlagException("QtGraphicDevice::drawText(). Unvalid horizontal alignment option.");
 
-  if (vpos ==  TEXT_VERTICAL_TOP)
+  if (vpos ==  TEXT_VERTICAL_TOP) {
     yset = mar;
-  else if (vpos ==  TEXT_VERTICAL_BOTTOM)
+  } else if (vpos ==  TEXT_VERTICAL_BOTTOM) {
     yset = fi.pixelSize() + mar;
-  else if (vpos ==  TEXT_VERTICAL_CENTER)
+  } else if (vpos ==  TEXT_VERTICAL_CENTER) {
     yset = fi.pixelSize() / 2 + mar;
-  else throw UnvalidFlagException("QtGraphicDevice::drawText(). Unvalid vertical alignment option.");
+  } else throw UnvalidFlagException("QtGraphicDevice::drawText(). Unvalid vertical alignment option.");
 
-  item->setPos(xpos(x) + xset, ypos(y) + 2 - yset);
+  item->setPos(xpos(x) + xset, ypos(y) - yset);
   item->setDefaultTextColor(currentPen_.color());
   item->setZValue(-qreal(getCurrentLayer()));
 }

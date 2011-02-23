@@ -19,6 +19,7 @@ set(H_FILES
   Bpp/Qt/Tree/TreeCanvas.h
   )
 set(H_MOC_FILES
+  Bpp/Qt/Tree/TreeCanvas.h
   Bpp/Qt/Tree/TreeCanvasControlers.h
   Bpp/Qt/Tree/TreeStatisticsBox.h
   )
