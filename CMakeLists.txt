@@ -31,7 +31,7 @@ ENDIF(NO_VIRTUAL_COV)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-SET(BPPQT_VERSION_CURRENT "1")
+SET(BPPQT_VERSION_CURRENT "2")
 SET(BPPQT_VERSION_REVISION "0")
 SET(BPPQT_VERSION_AGE "0")
 
@@ -69,7 +69,8 @@ ENDMACRO(IMPROVED_FIND_LIBRARY)
 
 #Find the Bio++ libraries:
 IMPROVED_FIND_LIBRARY(LIBS bpp-phyl Bpp/Phyl/Tree.h)
-IMPROVED_FIND_LIBRARY(LIBS bpp-seq Bpp/Seq/Alphabet/Alphabet.h)
+#Not needed for now:
+#IMPROVED_FIND_LIBRARY(LIBS bpp-seq Bpp/Seq/Alphabet/Alphabet.h)
 IMPROVED_FIND_LIBRARY(LIBS bpp-core Bpp/Clonable.h)
 
 # Find the Qt installation
@@ -92,8 +93,8 @@ ENDIF (DOXYGEN_FOUND)
 # Packager
 SET(CPACK_PACKAGE_NAME "libbpp-qt")
 SET(CPACK_PACKAGE_VENDOR "Bio++ Development Team")
-SET(CPACK_PACKAGE_VERSION "1.0.0")
-SET(CPACK_PACKAGE_VERSION_MAJOR "1")
+SET(CPACK_PACKAGE_VERSION "2.0.0")
+SET(CPACK_PACKAGE_VERSION_MAJOR "2")
 SET(CPACK_PACKAGE_VERSION_MINOR "0")
 SET(CPACK_PACKAGE_VERSION_PATCH "0")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Bio++ Qt graphic library")
