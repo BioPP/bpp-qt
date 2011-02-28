@@ -70,6 +70,9 @@ class MouseListener:
     virtual bool isAutonomous() const = 0;
 };
 
+/**
+ * @brief an empty implementation of the MouseListener interface.
+ */
 class MouseAdapter:
   public virtual MouseListener
 {
@@ -80,6 +83,9 @@ class MouseAdapter:
     void mouseReleaseEvent(QMouseEvent *event) {}
 };
 
+/**
+ * @brief a helper class that deal with several MouseListener classes.
+ */
 class MouseListenerGroup
 {
   private:

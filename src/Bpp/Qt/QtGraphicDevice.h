@@ -50,6 +50,18 @@ knowledge of the CeCILL license and that you accept its terms.
 //From the STL:
 #include <map>
 
+/**
+ * @mainpage
+ *
+ * @par
+ * This library provides graphic classes for Bio++ developed using the Qt library.
+ * The class QtGraphicDevice implements the GraphicDevice interface of the bpp-core library, allowing output in a Qt widget.
+ * Similarly, the QtOutputStream implemente the OutputStream interface, and allows to redirect outputs to a widget.
+ *
+ * @par
+ * For now, only phylogeny-oriented widgets are available. Sequence-oriented widgets will be developed in the future.
+ */
+
 namespace bpp
 {
 

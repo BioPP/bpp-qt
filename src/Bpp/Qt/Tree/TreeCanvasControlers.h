@@ -79,7 +79,9 @@ public :
 
 
 
-
+/**
+ * @brief Listener interface for TreeCanvasControlers.
+ */
 class TreeCanvasControlersListener
 {
   public:

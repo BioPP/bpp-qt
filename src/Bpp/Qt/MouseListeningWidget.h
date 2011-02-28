@@ -47,6 +47,9 @@ knowledge of the CeCILL license and that you accept its terms.
 
 namespace bpp {
 
+/**
+ * @brief A simple QWidget object which adds support for mouse listeners.
+ */
 class MouseListeningWidget:
   public QWidget
 {

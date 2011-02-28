@@ -62,6 +62,9 @@ namespace bpp
 
 class TreeCanvas;
 
+/**
+ * @brief A simple mouse event.
+ */
 class NodeMouseEvent:
   public QMouseEvent
 {
