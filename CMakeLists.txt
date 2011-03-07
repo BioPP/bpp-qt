@@ -114,7 +114,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
  ".*\\\\.rpm"
  ".*\\\\.dmg"
  ".*\\\\.sh"
- "\\\\..*\\\\.swp"
+ ".*\\\\..*\\\\.swp"
  "src/\\\\..*"
  "src/libbpp*"
  ".*moc_.*"
