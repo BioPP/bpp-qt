@@ -85,6 +85,9 @@ public :
 class TreeCanvasControlersListener
 {
   public:
+    virtual ~TreeCanvasControlersListener() {}
+
+  public:
     virtual void controlerTakesAction() = 0;
 };
 
