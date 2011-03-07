@@ -44,7 +44,7 @@ set_target_properties(bppqt-shared
 target_link_libraries(bppqt-shared ${LIBS})
 
 # Install libs
-install(TARGETS bppqt-static bppqt-shared DESTINATION lib)
+install(TARGETS bppqt-static bppqt-shared DESTINATION lib${LIB_SUFFIX})
 
 # Install headers
-install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN ".svn" EXCLUDE PATTERN "*.h" PATTERN "*.all")
+install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h" PATTERN "*.all")
