@@ -31,7 +31,7 @@ ENDIF(NO_VIRTUAL_COV)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-SET(BPPQT_VERSION_CURRENT "2")
+SET(BPPQT_VERSION_CURRENT "1")
 SET(BPPQT_VERSION_REVISION "0")
 SET(BPPQT_VERSION_AGE "0")
 
@@ -118,20 +118,26 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "src/\\\\..*"
  "src/libbpp*"
  ".*moc_.*"
+ "debian/tmp"
  "debian/libbpp.*/"
  "debian/libbpp.*\\\\.so.*"
  "debian/libbpp.*\\\\.a"
  "debian/libbpp.*\\\\.substvars"
  "debian/libbpp.*\\\\.debhelper"
  "debian/debhelper\\\\.log"
- "debian/tmp"
-  "html"
+ "html"
  "Qt.tag"
  "Testing"
  "build-stamp"
  "genIncludes.py"
+ "install_manifest.txt"
+ "DartConfiguration.tcl"
  ${CPACK_SOURCE_IGNORE_FILES}
 )
+IF (MACOS)
+  SET(CPACK_GENERATOR "Bundle")
+ENDIF()
+
 SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 INCLUDE(CPack)
 
@@ -141,7 +147,6 @@ ADD_CUSTOM_TARGET(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 IF (UNIX)
 #This creates deb packages:
 ADD_CUSTOM_TARGET(deb dpkg-buildpackage)
-ADD_DEPENDENCIES(deb dist)
 
 #This creates rpm packages:
 ADD_CUSTOM_TARGET(rpm rpmbuild -ta ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
