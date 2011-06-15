@@ -1,12 +1,12 @@
 libbpp-qt (2.0.1-1) unstable; urgency=low
 
+   * RFP: Bio++ -- The Bio++ bioinformatics libraries. (Closes: #616373).
   * Packages are now non-native.
 
  -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Thu, 09 Jun 2011 11:00:00 +0100
 
 libbpp-qt (2.0.0) unstable; urgency=low
 
-   * RFP: Bio++ -- The Bio++ bioinformatics libraries. (Closes: #616373).
    * Initial release
 
  -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Mon, 28 Feb 2011 09:00:00 +0100
