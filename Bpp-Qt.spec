@@ -1,5 +1,5 @@
 %define name bpp-qt
-%define version 2.0.0
+%define version 2.0.1
 %define release 1
 %define _prefix /usr
 
@@ -65,6 +65,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
+* Thu Jun 09 2011 Julien Dutheil <julien.dutheil@univ-montp2.fr>
+- Version 2.0.1
 * Mon Feb 28 2011 Julien Dutheil <julien.dutheil@univ-montp2.fr>
 - Version 2.0.0
 
