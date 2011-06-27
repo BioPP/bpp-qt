@@ -79,8 +79,7 @@ ENDMACRO(IMPROVED_FIND_LIBRARY)
 
 #Find the Bio++ libraries:
 IMPROVED_FIND_LIBRARY(LIBS bpp-phyl Bpp/Phyl/Tree.h)
-#Not needed for now:
-#IMPROVED_FIND_LIBRARY(LIBS bpp-seq Bpp/Seq/Alphabet/Alphabet.h)
+IMPROVED_FIND_LIBRARY(LIBS bpp-seq Bpp/Seq/Alphabet/Alphabet.h)
 IMPROVED_FIND_LIBRARY(LIBS bpp-core Bpp/Clonable.h)
 
 # Find the Qt installation
