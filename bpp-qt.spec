@@ -15,7 +15,7 @@ Summary: Bio++ Qt graphic library
 Group: Development/Libraries/C and C++
 Requires: bpp-core = 2.0.3
 Requires: bpp-phyl = 2.0.3
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?mdkversion}
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 Requires: qt >= 4.6.0
 %endif
 %if 0%{?suse_version}
@@ -23,9 +23,9 @@ Requires: libqt4 >= 4.6.0
 %endif
 %if 0%{?mdkversion}
 %ifarch x86_64
-BuildRequires: lib64qtgui4 >= 4.6.0
+Requires: lib64qtgui4 >= 4.6.0
 %else
-BuildRequires: libqtgui4 >= 4.6.0
+Requires: libqtgui4 >= 4.6.0
 %endif
 %endif
 
@@ -78,7 +78,7 @@ Requires: libbpp-phyl9 = 2.0.3
 Requires: libbpp-phyl-devel = 2.0.3
 Requires: libbpp-core2 = 2.0.3
 Requires: libbpp-core-devel = 2.0.3
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?mdkversion}
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 Requires: qt >= 4.6.0
 Requires: qt-devel >= 4.6.0
 %endif

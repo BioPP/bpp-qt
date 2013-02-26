@@ -47,4 +47,7 @@ target_link_libraries(bppqt-shared ${LIBS})
 install(TARGETS bppqt-static bppqt-shared DESTINATION lib${LIB_SUFFIX})
 
 # Install headers
-install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h" PATTERN "*.all")
+install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h")
+
+# Generate generic include files (.all)
+INSTALL(CODE "EXECUTE_PROCESS(COMMAND python ${CMAKE_SOURCE_DIR}/genIncludes.py ${CMAKE_PREFIX_PATH}/include/Bpp)")
