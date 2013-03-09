@@ -71,7 +71,7 @@ This library contains graphic classes developed in Qt.
 It is part of the Bio++ project.
 
 %package -n libbpp-qt-devel
-Summary: Libraries, includes to develop applications with %{_basename}.
+Summary: Libraries, includes to develop applications with %{_basename}
 Group: Development/Libraries/C and C++
 Requires: libbpp-qt1 = %{_version}
 Requires: libbpp-phyl9 = 2.0.3
@@ -97,7 +97,7 @@ Requires: libqt4-devel >= 4.6.0
 %endif
 
 %description -n libbpp-qt-devel
-The %libbpp-qt-devel package contains the header files and static libraries for
+The libbpp-qt-devel package contains the header files and static libraries for
 building applications which use %{_basename}.
 
 %prep
