@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 5), cmake (>= 2.6),
   qt4-qmake (>= 4.6.0),
   libqt4-dev (>= 4.6.0),
   libbpp-phyl-dev (>= 2.1.0),
-Standards-Version: 3.9.1
+Standards-Version: 3.9.4
 
 Package: libbpp-qt-dev
 Section: libdevel
