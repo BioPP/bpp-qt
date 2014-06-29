@@ -7,7 +7,7 @@ project (bpp-qt3 CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Compile options
-set (CMAKE_CXX_FLAGS "-Wall -Wshadow -Wconversion")
+add_compile_options(-Wall -Wshadow -Wconversion)
 
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
