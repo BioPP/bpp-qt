@@ -76,7 +76,7 @@ TreeCanvasControlers::TreeCanvasControlers(QWidget* parent): treeCanvas_(0)
   availableTreeDrawings_.append(QString(cladogram_->getName().c_str()));
   availableTreeDrawings_.append(QString(phylogram_->getName().c_str()));
   tdDisplayControler_ = new BasicTreeDrawingDisplayControler(tdSettings_);
-  tdDisplayControler_->addListener(PROPERTY_CLICKABLE_AREA, reinterpret_cast<TreeDrawingListener*>(new NodeClickableAreasTreeDrawingListener(true)));
+  tdDisplayControler_->addListener(PROPERTY_CLICKABLE_AREA, new NodeClickableAreasTreeDrawingListener(true));
   tdDisplayControler_->registerTreeDrawing(phylogram_);
   tdDisplayControler_->registerTreeDrawing(cladogram_);
   
