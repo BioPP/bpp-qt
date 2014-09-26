@@ -1,5 +1,5 @@
 %define _basename bpp-qt
-%define _version 2.1.0
+%define _version 2.2.0
 %define _release 1
 %define _prefix /usr
 
@@ -13,8 +13,8 @@ Vendor: The Bio++ Project
 Source: http://biopp.univ-montp2.fr/repos/sources/%{_basename}-%{_version}.tar.gz
 Summary: Bio++ Qt graphic library
 Group: Development/Libraries/C and C++
-Requires: bpp-core = 2.0.3
-Requires: bpp-phyl = 2.0.3
+Requires: bpp-core = %{_version}
+Requires: bpp-phyl = %{_version}
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 Requires: qt >= 4.6.0
 %endif
@@ -32,10 +32,10 @@ Requires: libqtgui4 >= 4.6.0
 BuildRoot: %{_builddir}/%{_basename}-root
 BuildRequires: cmake >= 2.6.0
 BuildRequires: gcc-c++ >= 4.0.0
-BuildRequires: libbpp-core2 = 2.1.0
-BuildRequires: libbpp-core-devel = 2.1.0
-BuildRequires: libbpp-phyl9 = 2.1.0
-BuildRequires: libbpp-phyl-devel = 2.1.0
+BuildRequires: libbpp-core2 = %{_version}
+BuildRequires: libbpp-core-devel = %{_version}
+BuildRequires: libbpp-phyl9 = %{_version}
+BuildRequires: libbpp-phyl-devel = %{_version}
 
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 BuildRequires: qt >= 4.6.0
@@ -74,10 +74,10 @@ It is part of the Bio++ project.
 Summary: Libraries, includes to develop applications with %{_basename}
 Group: Development/Libraries/C and C++
 Requires: libbpp-qt1 = %{_version}
-Requires: libbpp-phyl9 = 2.1.0
-Requires: libbpp-phyl-devel = 2.1.0
-Requires: libbpp-core2 = 2.1.0
-Requires: libbpp-core-devel = 2.1.0
+Requires: libbpp-phyl9 = %{_version}
+Requires: libbpp-phyl-devel = %{_version}
+Requires: libbpp-core2 = %{_version}
+Requires: libbpp-core-devel = %{_version}
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 Requires: qt >= 4.6.0
 Requires: qt-devel >= 4.6.0
@@ -227,6 +227,8 @@ exit 0
 %{_prefix}/include/*
 
 %changelog
+* Fri Sep 26 2014 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.2.0-1
+- Removed CLang warnings.
 * Fri Mar 08 2013 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.1.0-1
 - Compatibility update with other libraries.
 * Thu Feb 09 2012 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.0.2-1

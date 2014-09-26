@@ -13,7 +13,7 @@ Package: libbpp-qt-dev
 Section: libdevel
 Architecture: any
 Depends: libbpp-qt1 (= ${binary:Version}), ${misc:Depends},
-  libbpp-phyl-dev (>= 2.1.0), libqt4-dev (>= 4.6.0)
+  libbpp-phyl-dev (>= 2.2.0), libqt4-dev (>= 4.6.0)
 Description: Bio++ Qt Graphic classes library development files.
  Contains the Bio++ graphical classes developed with Qt.
 
@@ -21,7 +21,7 @@ Package: libbpp-qt1
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
-  libbpp-phyl9 (>= 2.1.0),
+  libbpp-phyl9 (>= 2.2.0),
   libqtcore4 (>= 4.6.0), libqtgui4 (>= 4.6.0)
 Description: Bio++ Qt Graphic classes library.
  Contains the Bio++ graphical classes developed with Qt.
