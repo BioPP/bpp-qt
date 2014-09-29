@@ -23,6 +23,7 @@ set(H_MOC_FILES
   Bpp/Qt/Tree/TreeCanvasControlers.h
   Bpp/Qt/Tree/TreeStatisticsBox.h
   )
+
 qt4_wrap_cpp(CPP_MOC_FILES ${H_MOC_FILES})
 
 # Build the static lib

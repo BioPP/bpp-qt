@@ -164,6 +164,7 @@ IF("${CMAKE_GENERATOR}" MATCHES "Make")
   ADD_CUSTOM_TARGET(make_clean
   COMMAND ${CMAKE_MAKE_PROGRAM} clean
   WORKING_DIRECTORY ${CMAKE_CURRENT_DIR}
+  COMMAND find . -name *.cxx_parameters -type f -delete
   )
   ADD_DEPENDENCIES(dist make_clean)
 ENDIF()
