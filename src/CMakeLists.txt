@@ -38,6 +38,7 @@ add_library(bppqt-shared SHARED ${CPP_FILES} ${CPP_MOC_FILES})
 set_target_properties(bppqt-shared
   PROPERTIES OUTPUT_NAME bpp-qt
   CLEAN_DIRECT_OUTPUT 1
+  MACOSX_RPATH 1
   VERSION ${BPPQT_VERSION}
   SOVERSION ${BPPQT_VERSION_MAJOR}
   )
