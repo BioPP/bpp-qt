@@ -123,13 +123,6 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "src/\\\\..*"
  "src/libbpp*"
  ".*moc_.*"
- "debian/tmp"
- "debian/libbpp.*/"
- "debian/libbpp.*\\\\.so.*"
- "debian/libbpp.*\\\\.a"
- "debian/libbpp.*\\\\.substvars"
- "debian/libbpp.*\\\\.debhelper"
- "debian/debhelper\\\\.log"
  "html"
  "Qt.tag"
  "Testing"
@@ -160,11 +153,6 @@ ENDIF()
 
 IF(NOT NO_DEP_CHECK)
 IF (UNIX)
-#This creates deb packages:
-ADD_CUSTOM_TARGET(origdist COMMAND cp ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz ../${CPACK_DEBSOURCE_PACKAGE_FILE_NAME}.tar.gz)
-ADD_DEPENDENCIES(origdist dist)
-ADD_CUSTOM_TARGET(deb dpkg-buildpackage -uc -us -i${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
-ADD_DEPENDENCIES(deb origdist)
 
 #This creates rpm packages:
 ADD_CUSTOM_TARGET(rpm rpmbuild -ta ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
