@@ -179,24 +179,24 @@ class TreeCanvas:
   
     void mouseDoubleClickEvent(QMouseEvent* event)
     {
-      std::auto_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+      std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
       mouseListenerGroup_.processMouseDoubleClickEvent(newEvent.get());
     }
 
     void mouseMoveEvent(QMouseEvent* event)
     {
-      std::auto_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+      std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
       mouseListenerGroup_.processMouseMoveEvent(newEvent.get());
     }
     void mousePressEvent(QMouseEvent* event)
     {
-      std::auto_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+      std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
       mouseListenerGroup_.processMousePressEvent(newEvent.get());
     }
 
     void mouseReleaseEvent(QMouseEvent* event)
     {
-      std::auto_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+      std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
       mouseListenerGroup_.processMouseReleaseEvent(newEvent.get());
     }
     /** @} */
