@@ -1,17 +1,21 @@
 # CMake script for Bio++ Qt
-# Author: Julien Dutheil
+# Authors:
+#   Julien Dutheil
+#   Francois Gindraud (2017)
 # Created: 22/08/2009
 
-# Global parameters
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-PROJECT(bpp-qt CXX C)
+cmake_minimum_required (VERSION 2.8.12)
+project (bpp-qt CXX)
+
+# Compile options
+set (public-compile-options -std=c++11)
+set (private-compile-options -Wall)
+
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
       "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
       FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
-
-SET(CMAKE_CXX_FLAGS "-std=c++11 -Wall")
 
 IF(NOT NO_DEP_CHECK)
   SET(NO_DEP_CHECK FALSE CACHE BOOL
@@ -31,54 +35,52 @@ ELSE(NO_DEP_CHECK)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-SET(BPPQT_VERSION_CURRENT "1")
-SET(BPPQT_VERSION_REVISION "1")
-SET(BPPQT_VERSION_AGE "0")
+SET(${PROJECT_NAME}_VERSION_CURRENT "1")
+SET(${PROJECT_NAME}_VERSION_REVISION "1")
+SET(${PROJECT_NAME}_VERSION_AGE "0")
 
 # Effective version number computation
-MATH(EXPR BPPQT_VERSION_MAJOR "${BPPQT_VERSION_CURRENT} - ${BPPQT_VERSION_AGE}")
-SET(BPPQT_VERSION_MINOR ${BPPQT_VERSION_AGE})
-SET(BPPQT_VERSION_PATCH ${BPPQT_VERSION_REVISION})
-SET(BPPQT_VERSION "${BPPQT_VERSION_MAJOR}.${BPPQT_VERSION_MINOR}.${BPPQT_VERSION_PATCH}")
+math(EXPR ${PROJECT_NAME}_VERSION_MAJOR "${${PROJECT_NAME}_VERSION_CURRENT} - ${${PROJECT_NAME}_VERSION_AGE}")
+SET(${PROJECT_NAME}_VERSION_MINOR ${${PROJECT_NAME}_VERSION_AGE})
+SET(${PROJECT_NAME}_VERSION_PATCH ${${PROJECT_NAME}_VERSION_REVISION})
+SET(${PROJECT_NAME}_VERSION "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_PATCH}")
 
-# Set the CMAKE_PREFIX_PATH for the find_library fonction when using non
-# standard install location
-IF(CMAKE_INSTALL_PREFIX)
-  SET(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}" ${CMAKE_PREFIX_PATH})
-ENDIF(CMAKE_INSTALL_PREFIX)
+set (PROJECT_VERSION ${${PROJECT_NAME}_VERSION})
 
-#here is a useful function:
-MACRO(IMPROVED_FIND_LIBRARY OUTPUT_LIBS lib_name include_to_find)
-  #start:
-  FIND_PATH(${lib_name}_INCLUDE_DIR ${include_to_find})
-  SET(${lib_name}_NAMES ${lib_name} ${lib_name}lib ${lib_name}dll)
-  FIND_LIBRARY(${lib_name}_LIBRARY NAMES ${${lib_name}_NAMES} PATH_SUFFIXES lib${LIB_SUFFIX})
+# Find dependencies (add install directory to search)
+if (CMAKE_INSTALL_PREFIX)
+  set (CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}" ${CMAKE_PREFIX_PATH})
+endif (CMAKE_INSTALL_PREFIX)
 
-  IF(${lib_name}_LIBRARY)
-    MESSAGE("-- Library ${lib_name} found here:")
-    MESSAGE("   includes : ${${lib_name}_INCLUDE_DIR}")
-    MESSAGE("   libraries: ${${lib_name}_LIBRARY}")
-  ELSE(${lib_name}_LIBRARY)
-    MESSAGE(FATAL_ERROR "${lib_name} required but not found.")
-  ENDIF(${lib_name}_LIBRARY)
-  
-  #add the dependency:
-  INCLUDE_DIRECTORIES(${${lib_name}_INCLUDE_DIR})
-  SET(${OUTPUT_LIBS} ${${OUTPUT_LIBS}} ${${lib_name}_LIBRARY})
-ENDMACRO(IMPROVED_FIND_LIBRARY)
-
-#Find the Bio++ libraries:
-IMPROVED_FIND_LIBRARY(LIBS bpp-phyl Bpp/Phyl/Tree.h)
-IMPROVED_FIND_LIBRARY(LIBS bpp-seq Bpp/Seq/Alphabet/Alphabet.h)
-IMPROVED_FIND_LIBRARY(LIBS bpp-core Bpp/Clonable.h)
+find_package (bpp-phyl 9.1.3 REQUIRED)
 
 # Find the Qt installation
-FIND_PACKAGE(Qt4 REQUIRED)
-INCLUDE(${QT_USE_FILE})
-SET(LIBS ${LIBS} ${QT_LIBRARIES})
+set (QT_USE_IMPORTED_TARGETS TRUE)
+find_package (Qt4 COMPONENTS QtCore QtGui REQUIRED)
+include (${QT_USE_FILE})
+set (qt-libs ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
-# Subdirectories
-ADD_SUBDIRECTORY(src)
+# CMake package
+set (cmake-package-location lib/cmake/${PROJECT_NAME})
+include (CMakePackageConfigHelpers)
+configure_package_config_file (
+  ${PROJECT_NAME}-config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+  INSTALL_DESTINATION ${cmake-package-location}
+  )
+write_basic_package_version_file (
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+  )
+install (FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+  DESTINATION ${cmake-package-location}
+  )
+
+# Define the libraries
+add_subdirectory (src)
 
 # Doxygen
 FIND_PACKAGE(Doxygen)
@@ -159,5 +161,4 @@ ADD_CUSTOM_TARGET(rpm rpmbuild -ta ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
 ADD_DEPENDENCIES(rpm dist)
 
 ENDIF()
-
 ENDIF(NOT NO_DEP_CHECK)
