@@ -4,6 +4,7 @@
 #   Francois Gindraud (2017)
 # Created: 22/08/2009
 
+# File list
 set (CPP_FILES
   Bpp/Qt/QtGraphicDevice.cpp
   Bpp/Qt/QtOutputStream.cpp
@@ -57,7 +58,7 @@ install (
   ARCHIVE DESTINATION lib${LIB_SUFFIX}
   )
 install (
-  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Bpp
   DESTINATION include
   FILES_MATCHING PATTERN "*.h"
   )
