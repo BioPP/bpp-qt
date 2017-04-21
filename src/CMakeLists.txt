@@ -1,51 +1,66 @@
 # CMake script for Bio++ Qt
-# Author: Julien Dutheil
+# Authors:
+#   Julien Dutheil
+#   Francois Gindraud (2017)
 # Created: 22/08/2009
 
 # File list
-set(CPP_FILES
+set (CPP_FILES
   Bpp/Qt/QtGraphicDevice.cpp
   Bpp/Qt/QtOutputStream.cpp
   Bpp/Qt/Tree/TreeCanvas.cpp
   Bpp/Qt/Tree/TreeCanvasControlers.cpp
   Bpp/Qt/Tree/TreeStatisticsBox.cpp
   )
-set(H_FILES
-  Bpp/Qt/QtGraphicDevice.h
-  Bpp/Qt/QtTools.h
-  Bpp/Qt/QtOutputStream.h
-  Bpp/Qt/MouseListener.h
-  Bpp/Qt/MouseListeningWidget.h
-  Bpp/Qt/Tree/TreeCanvas.h
-  )
-set(H_MOC_FILES
+set (H_MOC_FILES
   Bpp/Qt/Tree/TreeCanvas.h
   Bpp/Qt/Tree/TreeCanvasControlers.h
   Bpp/Qt/Tree/TreeStatisticsBox.h
   )
-qt4_wrap_cpp(CPP_MOC_FILES ${H_MOC_FILES})
+qt4_wrap_cpp (CPP_MOC_FILES ${H_MOC_FILES})
 
 # Build the static lib
-add_library(bppqt-static STATIC ${CPP_FILES} ${CPP_MOC_FILES})
-set_target_properties(bppqt-static
-  PROPERTIES OUTPUT_NAME bpp-qt
-  CLEAN_DIRECT_OUTPUT 1
+add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES} ${CPP_MOC_FILES})
+target_include_directories (${PROJECT_NAME}-static PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:include>
   )
-target_link_libraries(bppqt-static ${LIBS})
+set_target_properties (${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC} ${qt-libs})
+target_compile_options (${PROJECT_NAME}-static
+  PUBLIC ${public-compile-options}
+  PRIVATE ${private-compile-options}
+  )
 
 # Build the shared lib
-add_library(bppqt-shared SHARED ${CPP_FILES} ${CPP_MOC_FILES})
-set_target_properties(bppqt-shared
-  PROPERTIES OUTPUT_NAME bpp-qt
-  CLEAN_DIRECT_OUTPUT 1
-  VERSION ${BPPQT_VERSION}
-  SOVERSION ${BPPQT_VERSION_MAJOR}
+add_library (${PROJECT_NAME}-shared SHARED ${CPP_FILES} ${CPP_MOC_FILES})
+target_include_directories (${PROJECT_NAME}-shared PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:include>
   )
-target_link_libraries(bppqt-shared ${LIBS})
+set_target_properties (${PROJECT_NAME}-shared
+  PROPERTIES OUTPUT_NAME ${PROJECT_NAME}
+  MACOSX_RPATH 1
+  VERSION ${${PROJECT_NAME}_VERSION}
+  SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR}
+  )
+target_link_libraries (${PROJECT_NAME}-shared ${BPP_LIBS_SHARED} ${qt-libs})
+target_compile_options (${PROJECT_NAME}-shared
+  PUBLIC ${public-compile-options}
+  PRIVATE ${private-compile-options}
+  )
 
-# Install libs
-install(TARGETS bppqt-static bppqt-shared DESTINATION lib${LIB_SUFFIX})
-
-# Install headers
-install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h")
-
+# Install libs and headers
+install (
+  TARGETS ${PROJECT_NAME}-static ${PROJECT_NAME}-shared
+  EXPORT ${PROJECT_NAME}-targets
+  LIBRARY DESTINATION lib${LIB_SUFFIX}
+  ARCHIVE DESTINATION lib${LIB_SUFFIX}
+  )
+install (
+  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Bpp
+  DESTINATION include
+  FILES_MATCHING PATTERN "*.h"
+  )
+# Install cmake file representing targets
+install (EXPORT ${PROJECT_NAME}-targets DESTINATION ${cmake-package-location})
