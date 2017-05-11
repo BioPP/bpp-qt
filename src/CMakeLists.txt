@@ -27,10 +27,6 @@ target_include_directories (${PROJECT_NAME}-static PUBLIC
   )
 set_target_properties (${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC} ${qt-libs})
-target_compile_options (${PROJECT_NAME}-static
-  PUBLIC ${public-compile-options}
-  PRIVATE ${private-compile-options}
-  )
 
 # Build the shared lib
 add_library (${PROJECT_NAME}-shared SHARED ${CPP_FILES} ${CPP_MOC_FILES})
@@ -45,10 +41,6 @@ set_target_properties (${PROJECT_NAME}-shared
   SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR}
   )
 target_link_libraries (${PROJECT_NAME}-shared ${BPP_LIBS_SHARED} ${qt-libs})
-target_compile_options (${PROJECT_NAME}-shared
-  PUBLIC ${public-compile-options}
-  PRIVATE ${private-compile-options}
-  )
 
 # Install libs and headers
 install (
