@@ -23,7 +23,7 @@ qt4_wrap_cpp (CPP_MOC_FILES ${H_MOC_FILES})
 add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES} ${CPP_MOC_FILES})
 target_include_directories (${PROJECT_NAME}-static PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
   )
 set_target_properties (${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC} ${qt-libs})
@@ -32,7 +32,7 @@ target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC} ${qt-libs})
 add_library (${PROJECT_NAME}-shared SHARED ${CPP_FILES} ${CPP_MOC_FILES})
 target_include_directories (${PROJECT_NAME}-shared PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
   )
 set_target_properties (${PROJECT_NAME}-shared
   PROPERTIES OUTPUT_NAME ${PROJECT_NAME}
