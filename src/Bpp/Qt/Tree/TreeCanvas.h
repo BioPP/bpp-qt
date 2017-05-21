@@ -90,7 +90,7 @@ class NodeMouseEvent:
 /**
  * @brief Panel for plotting phylogenetic trees.
  *
- * The graphe used for plotting the tree depends on the TreeDrawing object used.
+ * The graph used for plotting the tree depends on the TreeDrawing object used.
  * This panel can also capture event when a node is clicked on the tree.
  */
 class TreeCanvas:
@@ -110,6 +110,16 @@ class TreeCanvas:
 
   public:
     TreeCanvas(QWidget* parent = 0);
+
+  private:
+    //No copy allowed
+    TreeCanvas(const TreeCanvas& tc):
+      currentTree_(), treeDrawing_(), defaultTreeDrawing_(), device_(),
+      drawingWidth_(), drawingHeight_(), mouseListenerGroup_(), nodeCollapsed_()
+    {}
+    TreeCanvas& operator=(const TreeCanvas& tc) { return *this; }
+      
+  public:
     virtual ~TreeCanvas()
     {
       delete defaultTreeDrawing_;

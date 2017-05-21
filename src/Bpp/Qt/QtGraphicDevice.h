@@ -49,6 +49,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 //From the STL:
 #include <map>
+#include <memory>
 
 /**
  * @mainpage
@@ -74,7 +75,7 @@ class QtGraphicDevice:
   public AbstractGraphicDevice
 {
   private:
-    QGraphicsScene* scene_;
+    std::unique_ptr<QGraphicsScene> scene_;
     std::map<short int, Qt::PenStyle> supportedLineTypes_;
     QPen currentPen_;
     QBrush currentBrush_;
@@ -108,6 +109,8 @@ class QtGraphicDevice:
     int ypos(double y) const { return static_cast<int>(round(y_(y))); }
     double revx(int xpos) const { return revx_(static_cast<double>(xpos)); }
     double revy(int ypos) const { return revy_(static_cast<double>(ypos)); }
+    double revx(double xpos) const { return revx_(xpos); }
+    double revy(double ypos) const { return revy_(ypos); }
 
  
 };

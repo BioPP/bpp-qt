@@ -55,7 +55,7 @@ using namespace std;
 using namespace bpp;
 
 QtGraphicDevice::QtGraphicDevice() :
-  scene_(0), supportedLineTypes_(), currentPen_(), currentBrush_(Qt::SolidPattern), currentFont_()
+  scene_(), supportedLineTypes_(), currentPen_(), currentBrush_(Qt::SolidPattern), currentFont_()
 {
   supportedLineTypes_[GraphicDevice::LINE_SOLID] = Qt::SolidLine;
   supportedLineTypes_[GraphicDevice::LINE_DASHED] = Qt::DashLine;
@@ -68,8 +68,7 @@ QtGraphicDevice::~QtGraphicDevice() {}
 
 void QtGraphicDevice::begin() throw (Exception)
 {
-  if (scene_) delete scene_;
-  scene_ = new QGraphicsScene();
+  scene_.reset(new QGraphicsScene());
 }
 
 void QtGraphicDevice::end()
@@ -131,7 +130,7 @@ void QtGraphicDevice::drawCircle(double x, double y, double radius, short fill)
 
 void QtGraphicDevice::drawText(double x, double y, const std::string& text, short hpos, short vpos, double angle) throw (UnvalidFlagException)
 {
-  int xset = 0, yset = 0;
+  qreal xset = 0, yset = 0;
   QString qtext = text.c_str();
   QGraphicsTextItem* item = scene_->addText(qtext, currentFont_);
   QSizeF fsize = item->document()->size();

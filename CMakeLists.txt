@@ -8,7 +8,7 @@ cmake_minimum_required (VERSION 2.8.11)
 project (bpp-qt CXX)
 
 # Compile options
-set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
+set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wshadow -Wconversion")
 
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
@@ -51,7 +51,7 @@ if (CMAKE_INSTALL_PREFIX)
   set (CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}" ${CMAKE_PREFIX_PATH})
 endif (CMAKE_INSTALL_PREFIX)
 
-find_package (bpp-phyl 9.1.3 REQUIRED)
+find_package (bpp-phyl 9.1.4 REQUIRED)
 
 # Find the Qt installation
 set (QT_USE_IMPORTED_TARGETS TRUE)
@@ -99,9 +99,9 @@ ENDIF(NO_DEP_CHECK)
 # Packager
 SET(CPACK_PACKAGE_NAME "libbpp-qt")
 SET(CPACK_PACKAGE_VENDOR "Bio++ Development Team")
-SET(CPACK_PACKAGE_VERSION "2.2.0")
+SET(CPACK_PACKAGE_VERSION "2.3.0")
 SET(CPACK_PACKAGE_VERSION_MAJOR "2")
-SET(CPACK_PACKAGE_VERSION_MINOR "2")
+SET(CPACK_PACKAGE_VERSION_MINOR "3")
 SET(CPACK_PACKAGE_VERSION_PATCH "0")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Bio++ Qt graphic library")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING.txt")

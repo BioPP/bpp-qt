@@ -66,12 +66,14 @@ NodeMouseEvent::NodeMouseEvent(const TreeCanvas& treeCanvas, const QMouseEvent& 
 TreeCanvas::TreeCanvas(QWidget* parent) :
   QGraphicsView(parent),
   currentTree_(0),
+  treeDrawing_(),
+  defaultTreeDrawing_(new CladogramPlot()),
   device_(),
   drawingWidth_(600),
   drawingHeight_(800),
-  mouseListenerGroup_()
+  mouseListenerGroup_(),
+  nodeCollapsed_()
 {
-  defaultTreeDrawing_ = new CladogramPlot();
   treeDrawing_ = defaultTreeDrawing_;
 }
 
@@ -126,7 +128,7 @@ void TreeCanvas::setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint)
   treeDrawing_ = dynamic_cast<TreeDrawing*>(treeDrawing.clone());
   treeDrawing_->setTree(currentTree_);
   vector<int> ids = currentTree_->getNodesId();
-  for (unsigned int i = 0; i < ids.size(); i++) {
+  for (size_t i = 0; i < ids.size(); i++) {
     treeDrawing_->collapseNode(ids[i], nodeCollapsed_[ids[i]]);
   }
   if (repaint) {
