@@ -85,7 +85,9 @@ public:
 
   static QColor toQt(const RGBColor& color)
   {
-    return QColor(color[0], color[1], color[2]);
+    return QColor(static_cast<int>(color[0]),
+		  static_cast<int>(color[1]),
+		  static_cast<int>(color[2]));
   }
 
   static QFont toQt(const Font& font)

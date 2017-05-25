@@ -96,7 +96,7 @@ void QtGraphicDevice::setCurrentFont(const Font& font)
 void QtGraphicDevice::setCurrentPointSize(unsigned int size)
 {
   AbstractGraphicDevice::setCurrentPointSize(size);
-  currentPen_.setWidth(static_cast<uint>(size));
+  currentPen_.setWidth(static_cast<int>(size));
 }
 
 void QtGraphicDevice::setCurrentLineType(short type) throw (Exception)
