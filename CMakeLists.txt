@@ -51,6 +51,7 @@ if (CMAKE_INSTALL_PREFIX)
   set (CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}" ${CMAKE_PREFIX_PATH})
 endif (CMAKE_INSTALL_PREFIX)
 
+include (GNUInstallDirs)
 find_package (bpp-phyl 11.0.0 REQUIRED)
 
 # Find the Qt installation
@@ -60,7 +61,7 @@ include (${QT_USE_FILE})
 set (qt-libs ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 # CMake package
-set (cmake-package-location lib/cmake/${PROJECT_NAME})
+set (cmake-package-location ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 include (CMakePackageConfigHelpers)
 configure_package_config_file (
   package.cmake.in
