@@ -42,6 +42,8 @@ knowledge of the CeCILL license and that you accept its terms.
 //From Qt:
 #include <QtGui>
 #include <QRadioButton>
+#include <QHBoxLayout>
+#include <QButtonGroup>
 
 using namespace bpp;
 

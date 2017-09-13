@@ -17,10 +17,8 @@ set (H_MOC_FILES
   Bpp/Qt/Tree/TreeCanvasControlers.h
   Bpp/Qt/Tree/TreeStatisticsBox.h
   )
-qt4_wrap_cpp (CPP_MOC_FILES ${H_MOC_FILES})
-
 # Build the static lib
-add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES} ${CPP_MOC_FILES})
+add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES})
 target_include_directories (${PROJECT_NAME}-static PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>
@@ -29,7 +27,7 @@ set_target_properties (${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_N
 target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC} ${qt-libs})
 
 # Build the shared lib
-add_library (${PROJECT_NAME}-shared SHARED ${CPP_FILES} ${CPP_MOC_FILES})
+add_library (${PROJECT_NAME}-shared SHARED ${CPP_FILES})
 target_include_directories (${PROJECT_NAME}-shared PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>

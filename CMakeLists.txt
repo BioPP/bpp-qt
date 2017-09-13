@@ -55,10 +55,12 @@ include (GNUInstallDirs)
 find_package (bpp-phyl 11.0.0 REQUIRED)
 
 # Find the Qt installation
-set (QT_USE_IMPORTED_TARGETS TRUE)
-find_package (Qt4 COMPONENTS QtCore QtGui REQUIRED)
-include (${QT_USE_FILE})
-set (qt-libs ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+#set (QT_USE_IMPORTED_TARGETS TRUE)
+set(CMAKE_AUTOMOC ON)
+find_package (Qt5Widgets)
+find_package (Qt5Core)
+find_package (Qt5Gui)
+set (qt-libs Qt5::Core Qt5::Gui Qt5::Widgets)
 
 # CMake package
 set (cmake-package-location ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
