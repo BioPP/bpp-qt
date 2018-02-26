@@ -66,7 +66,7 @@ QtGraphicDevice::QtGraphicDevice() :
 
 QtGraphicDevice::~QtGraphicDevice() {}
 
-void QtGraphicDevice::begin() throw (Exception)
+void QtGraphicDevice::begin()
 {
   scene_.reset(new QGraphicsScene());
 }
@@ -99,7 +99,7 @@ void QtGraphicDevice::setCurrentPointSize(unsigned int size)
   currentPen_.setWidth(static_cast<int>(size));
 }
 
-void QtGraphicDevice::setCurrentLineType(short type) throw (Exception)
+void QtGraphicDevice::setCurrentLineType(short type)
 {
   AbstractGraphicDevice::setCurrentLineType(type);
   currentPen_.setStyle(supportedLineTypes_[type]);
@@ -128,7 +128,7 @@ void QtGraphicDevice::drawCircle(double x, double y, double radius, short fill)
 
 }
 
-void QtGraphicDevice::drawText(double x, double y, const std::string& text, short hpos, short vpos, double angle) throw (UnvalidFlagException)
+void QtGraphicDevice::drawText(double x, double y, const std::string& text, short hpos, short vpos, double angle)
 {
   qreal xset = 0, yset = 0;
   QString qtext = text.c_str();

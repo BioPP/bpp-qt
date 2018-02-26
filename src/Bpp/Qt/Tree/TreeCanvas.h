@@ -77,7 +77,7 @@ class NodeMouseEvent:
 
     bool hasNodeId() const { return hasNode_; }
 
-    int getNodeId() const throw (NodeNotFoundException)
+    int getNodeId() const
     {
       if (!hasNode_)
         throw NodeNotFoundException("NodeMouseEvent::getNodeId().", "");
@@ -148,7 +148,7 @@ class TreeCanvas:
     virtual unsigned int drawingWidth() const { return drawingWidth_; }
     virtual unsigned int drawingHeight() const { return drawingHeight_; }
 
-    void collapseNode(int nodeId, bool tf) throw (NodeNotFoundException)
+    void collapseNode(int nodeId, bool tf)
     {
       if (!currentTree_) return;
       if (!currentTree_->hasNode(nodeId))
@@ -158,7 +158,7 @@ class TreeCanvas:
       nodeCollapsed_[nodeId] = tf;
     }
 
-    bool isNodeCollapsed(int nodeId) const throw (NodeNotFoundException)
+    bool isNodeCollapsed(int nodeId) const
     {
       if (!currentTree_) return false;
       if (!currentTree_->hasNode(nodeId))
