@@ -12,7 +12,7 @@ Summary: Bio++ Qt graphic library
 Group: Development/Libraries/C and C++
 Requires: bpp-core = %{version}
 Requires: bpp-phyl = %{version}
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version}
 Requires: libqt5core5 >= 5.0.0
 Requires: libqt5gui5 >= 5.0.0
 Requires: libqt5widgets5 >= 5.0.0
@@ -51,7 +51,7 @@ BuildRequires: libbpp-core-devel = %{version}
 BuildRequires: libbpp-phyl12 = %{version}
 BuildRequires: libbpp-phyl-devel = %{version}
 
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version}
 BuildRequires: qt5-qtdeclarative >= 5.0.0
 BuildRequires: qt5-qtbase >= 5.0.0
 BuildRequires: qt5-qtdeclarative-devel >= 5.0.0
@@ -103,7 +103,8 @@ Requires: libbpp-phyl12 = %{version}
 Requires: libbpp-phyl-devel = %{version}
 Requires: libbpp-core4 = %{version}
 Requires: libbpp-core-devel = %{version}
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version} || 0%{?scientificlinux_version}
+
 Requires: qt5-qtdeclarative >= 5.0.0
 Requires: qt5-qtbase >= 5.0.0
 Requires: qt5-qtdeclarative-devel >= 5.0.0
