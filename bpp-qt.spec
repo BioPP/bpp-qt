@@ -4,7 +4,7 @@ URL: https://github.com/BioPP/bpp-qt
 
 Name: bpp-qt
 Version: 2.4.0
-Release: 1
+Release: 1%{?dist}
 License: CECILL-2.0
 Vendor: The Bio++ Project
 Source: %{name}-%{version}.tar.gz
