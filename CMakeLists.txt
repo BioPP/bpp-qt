@@ -57,9 +57,9 @@ find_package (bpp-phyl 12.0.0 REQUIRED)
 # Find the Qt installation
 #set (QT_USE_IMPORTED_TARGETS TRUE)
 set(CMAKE_AUTOMOC ON)
-find_package (Qt5Widgets)
-find_package (Qt5Core)
-find_package (Qt5Gui)
+find_package (Qt5 COMPONENTS Core)
+find_package (Qt5 COMPONENTS Widgets)
+find_package (Qt5 COMPONENTS Gui)
 set (qt-libs Qt5::Core Qt5::Gui Qt5::Widgets)
 
 # CMake package

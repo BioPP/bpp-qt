@@ -4,6 +4,8 @@
 #   Francois Gindraud (2017)
 # Created: 22/08/2009
 
+cmake_policy(SET CMP0028 NEW)
+
 # File list
 set (CPP_FILES
   Bpp/Qt/QtGraphicDevice.cpp
