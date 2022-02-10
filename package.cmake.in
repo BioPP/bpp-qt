@@ -6,7 +6,7 @@
 
 if (NOT @PROJECT_NAME@_FOUND)
   # Deps
-  find_package (bpp-phyl @bpp-phyl_VERSION@ REQUIRED)
+  find_package (bpp-phyl3 @bpp-phyl_VERSION@ REQUIRED)
   # QT dep (pull imported target required by bpp-qt)
   set (QT_USE_IMPORTED_TARGETS TRUE)
   find_package (Qt5 COMPONENTS Core Gui Widgets REQUIRED)
