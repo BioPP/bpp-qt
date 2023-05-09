@@ -49,7 +49,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <algorithm>
 
-//From PhylLib:
+//From bpp-phyl:
 #include <Bpp/Phyl/Tree/Tree.h>
 #include <Bpp/Phyl/Graphics/TreeDrawing.h>
 #include <Bpp/Phyl/Graphics/AbstractTreeDrawing.h>

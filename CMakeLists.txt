@@ -6,9 +6,10 @@
 
 cmake_minimum_required (VERSION 3.0.0)
 project (bpp-qt3 CXX)
-
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Compile options
-set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wshadow -Wconversion")
+set (CMAKE_CXX_FLAGS "-Wall -Wshadow -Wconversion")
 
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
