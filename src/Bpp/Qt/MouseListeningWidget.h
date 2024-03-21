@@ -1,4 +1,3 @@
-// Copyright or © or Copr. Bio++ Develomment Team, (2010)
 // SPDX-FileCopyrightText: The Bio++ Development Group
 //
 // SPDX-License-Identifier: CECILL-2.1

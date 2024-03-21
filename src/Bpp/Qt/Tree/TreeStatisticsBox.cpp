@@ -1,4 +1,3 @@
-// Copyright or (c) or Copr. CNRS, (November 16, 2004)
 // SPDX-FileCopyrightText: The Bio++ Development Group
 //
 // SPDX-License-Identifier: CECILL-2.1
