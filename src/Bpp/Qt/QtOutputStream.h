@@ -9,18 +9,17 @@
 
 #include <Bpp/Io/OutputStream.h>
 
-//From Qt:
+// From Qt:
 #include <QPainter>
 #include <Qt>
 #include <QTextEdit>
 
-//From the STL:
+// From the STL:
 #include <map>
 #include <iostream>
 
 namespace bpp
 {
-
 /**
  * @brief Qt output stream: Qt widget that implements the OutputStream interface.
  *
@@ -76,12 +75,7 @@ public:
 
 private:
   void checkNumberOfLines();
-
 };
+} // end of namespace bpp
 
-
-
-} //end of namespace bpp
-
-#endif //_QTOUTPUTSTREAM_H_
-
+#endif // _QTOUTPUTSTREAM_H_

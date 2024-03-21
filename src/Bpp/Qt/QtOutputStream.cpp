@@ -20,4 +20,3 @@ void QtOutputStream::checkNumberOfLines()
     setPlainText(text);
   }
 }
-

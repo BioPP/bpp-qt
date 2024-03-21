@@ -5,14 +5,14 @@
 #include "QtGraphicDevice.h"
 #include "QtTools.h"
 
-//From Qt:
+// From Qt:
 #include <QGraphicsLineItem>
 #include <QGraphicsRectItem>
 #include <QGraphicsTextItem>
 #include <QTextDocument>
 #include <QFontInfo>
 
-//From the STL:
+// From the STL:
 #include <iostream>
 using namespace std;
 
@@ -69,10 +69,10 @@ void QtGraphicDevice::setCurrentLineType(short type)
   currentPen_.setStyle(supportedLineTypes_[type]);
 }
 
-//void QtGraphicDevice::setCurrentLayer(int layerIndex)
-//{
+// void QtGraphicDevice::setCurrentLayer(int layerIndex)
+// {
 //
-//}
+// }
 
 void QtGraphicDevice::drawLine(double x1, double y1, double x2, double y2)
 {
@@ -89,7 +89,6 @@ void QtGraphicDevice::drawRect(double x, double y, double width, double height, 
 
 void QtGraphicDevice::drawCircle(double x, double y, double radius, short fill)
 {
-
 }
 
 void QtGraphicDevice::drawText(double x, double y, const std::string& text, short hpos, short vpos, double angle)
@@ -106,18 +105,25 @@ void QtGraphicDevice::drawText(double x, double y, const std::string& text, shor
     xset = -fsize.rwidth();
   else if (hpos ==  TEXT_HORIZONTAL_CENTER)
     xset = -fsize.rwidth() / 2;
-  else throw UnvalidFlagException("QtGraphicDevice::drawText(). Unvalid horizontal alignment option.");
+  else
+    throw UnvalidFlagException("QtGraphicDevice::drawText(). Unvalid horizontal alignment option.");
 
-  if (vpos ==  TEXT_VERTICAL_TOP) {
+  if (vpos ==  TEXT_VERTICAL_TOP)
+  {
     yset = mar;
-  } else if (vpos ==  TEXT_VERTICAL_BOTTOM) {
+  }
+  else if (vpos ==  TEXT_VERTICAL_BOTTOM)
+  {
     yset = fi.pixelSize() + mar;
-  } else if (vpos ==  TEXT_VERTICAL_CENTER) {
+  }
+  else if (vpos ==  TEXT_VERTICAL_CENTER)
+  {
     yset = fi.pixelSize() / 2 + mar;
-  } else throw UnvalidFlagException("QtGraphicDevice::drawText(). Unvalid vertical alignment option.");
+  }
+  else
+    throw UnvalidFlagException("QtGraphicDevice::drawText(). Unvalid vertical alignment option.");
 
   item->setPos(xpos(x) + xset, ypos(y) - yset);
   item->setDefaultTextColor(currentPen_.color());
   item->setZValue(-qreal(getCurrentLayer()));
 }
-

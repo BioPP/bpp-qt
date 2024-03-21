@@ -5,7 +5,7 @@
 #include "TreeCanvas.h"
 #include <QGraphicsItem>
 
-//From PhyLib:
+// From PhyLib:
 #include <Bpp/Phyl/Graphics/CladogramPlot.h>
 
 using namespace bpp;
@@ -13,17 +13,20 @@ using namespace bpp;
 #include <iostream>
 using namespace std;
 
-NodeMouseEvent::NodeMouseEvent(const TreeCanvas& treeCanvas, const QMouseEvent& event):
+NodeMouseEvent::NodeMouseEvent(const TreeCanvas& treeCanvas, const QMouseEvent& event) :
   QMouseEvent(event), hasNode_(false), nodeId_(0)
 {
   QPointF scenePos = treeCanvas.mapToScene(event.pos());
   Point2D<double> pos(
       treeCanvas.getDevice().revx(scenePos.x()),
       treeCanvas.getDevice().revy(scenePos.y()));
-  try {
+  try
+  {
     nodeId_ = treeCanvas.getTreeDrawing()->getNodeAt(pos);
     hasNode_ = true;
-  } catch (std::exception& e) {
+  }
+  catch (std::exception& e)
+  {
     hasNode_ = false;
   }
 }
@@ -50,17 +53,20 @@ void TreeCanvas::redraw()
     device_.begin();
     treeDrawing_->setXUnit(static_cast<double>(drawingWidth()) / treeDrawing_->getWidth());
     treeDrawing_->setYUnit(static_cast<double>(drawingHeight()) / treeDrawing_->getHeight());
-    treeDrawing_->plot(device_);    
+    treeDrawing_->plot(device_);
     device_.end();
     QGraphicsScene* scene = &device_.getScene();
-    
-    //Need to do that because line have can have a bounding box with null dimension.
+
+    // Need to do that because line have can have a bounding box with null dimension.
     QRectF rect;
     QList<QGraphicsItem*> items = scene->items();
-    for (int i = 0; i < items.size(); i++) {
+    for (int i = 0; i < items.size(); i++)
+    {
       QRectF bb = items[i]->boundingRegion(items[i]->sceneTransform()).boundingRect();
-      if (i == 0) rect = bb;
-      else {
+      if (i == 0)
+        rect = bb;
+      else
+      {
         rect.setLeft(min(rect.left(), bb.left()));
         rect.setRight(max(rect.right(), bb.right()));
         rect.setBottom(max(rect.bottom(), bb.bottom()));
@@ -93,10 +99,12 @@ void TreeCanvas::setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint)
   treeDrawing_ = dynamic_cast<TreeDrawing*>(treeDrawing.clone());
   treeDrawing_->setTree(currentTree_);
   vector<int> ids = currentTree_->getNodesId();
-  for (size_t i = 0; i < ids.size(); i++) {
+  for (size_t i = 0; i < ids.size(); i++)
+  {
     treeDrawing_->collapseNode(ids[i], nodeCollapsed_[ids[i]]);
   }
-  if (repaint) {
+  if (repaint)
+  {
     this->repaint();
   }
 }
@@ -105,13 +113,16 @@ QList<QGraphicsTextItem*> TreeCanvas::searchText(const QString& text)
 {
   QList<QGraphicsTextItem*> match;
   QList<QGraphicsItem*> items = device_.getScene().items();
-  for (int i = 0; i < items.size(); ++i) {
+  for (int i = 0; i < items.size(); ++i)
+  {
     QGraphicsTextItem* item = dynamic_cast<QGraphicsTextItem*>(items[i]);
-    if (item) {
-      if (item->toPlainText().indexOf(text) > -1) {
+    if (item)
+    {
+      if (item->toPlainText().indexOf(text) > -1)
+      {
         match.append(item);
       }
-    } //Else not a text item
+    } // Else not a text item
   }
   return match;
 }

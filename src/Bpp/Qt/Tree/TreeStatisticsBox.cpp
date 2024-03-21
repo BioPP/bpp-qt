@@ -7,12 +7,12 @@
 #include <Bpp/Text/TextTools.h>
 #include <Bpp/Numeric/VectorTools.h>
 
-//From Qt:
+// From Qt:
 #include <QFormLayout>
 
 using namespace bpp;
 
-TreeStatisticsBox::TreeStatisticsBox(QWidget* parent):
+TreeStatisticsBox::TreeStatisticsBox(QWidget* parent) :
   QGroupBox(parent),
   leavesNumber_(this),
   ancestorsNumber_(this),
@@ -38,4 +38,3 @@ void TreeStatisticsBox::updateTree(const Tree& tree)
   depth_.setText(tr(TextTools::toString(*stats_.getNodeDepths().rbegin()).c_str()));
   height_.setText(tr(TextTools::toString(*stats_.getNodeHeights().rbegin()).c_str()));
 }
-

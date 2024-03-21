@@ -7,51 +7,48 @@
 
 #include "MouseListener.h"
 
-//From Qt:
+// From Qt:
 #include <QWidget>
 
-namespace bpp {
-
+namespace bpp
+{
 /**
  * @brief A simple QWidget object which adds support for mouse listeners.
  */
-class MouseListeningWidget:
+class MouseListeningWidget :
   public QWidget
 {
   Q_OBJECT
 
-  private:
-    MouseListenerGroup mouseListenerGroup_;
+private:
+  MouseListenerGroup mouseListenerGroup_;
 
-  public:
-    void addMouseListener(MouseListener* listener)
-    {
-      mouseListenerGroup_.addMouseListener(listener);
-    }
+public:
+  void addMouseListener(MouseListener* listener)
+  {
+    mouseListenerGroup_.addMouseListener(listener);
+  }
 
-  protected:
-  
-    void mouseDoubleClickEvent(QMouseEvent* event)
-    {
-      mouseListenerGroup_.processMouseDoubleClickEvent(event);
-    }
+protected:
+  void mouseDoubleClickEvent(QMouseEvent* event)
+  {
+    mouseListenerGroup_.processMouseDoubleClickEvent(event);
+  }
 
-    void mouseMoveEvent(QMouseEvent* event)
-    {
-      mouseListenerGroup_.processMouseMoveEvent(event);
-    }
-    void mousePressEvent(QMouseEvent* event)
-    {
-      mouseListenerGroup_.processMousePressEvent(event);
-    }
+  void mouseMoveEvent(QMouseEvent* event)
+  {
+    mouseListenerGroup_.processMouseMoveEvent(event);
+  }
+  void mousePressEvent(QMouseEvent* event)
+  {
+    mouseListenerGroup_.processMousePressEvent(event);
+  }
 
-    void mouseReleaseEvent(QMouseEvent* event)
-    {
-      mouseListenerGroup_.processMouseReleaseEvent(event);
-    }
+  void mouseReleaseEvent(QMouseEvent* event)
+  {
+    mouseListenerGroup_.processMouseReleaseEvent(event);
+  }
 };
+} // end of namespace bpp.
 
-} //end of namespace bpp.
-
-#endif //_MOUSELISTENINGWIDGET_H_
-
+#endif // _MOUSELISTENINGWIDGET_H_

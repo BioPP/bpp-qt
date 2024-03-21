@@ -10,13 +10,12 @@
 #include <Bpp/BppString.h>
 #include <Bpp/Numeric/Number.h>
 
-//From Qt:
+// From Qt:
 #include <QColor>
 #include <QFont>
 
 namespace bpp
 {
-
 /**
  * @brief Utilitary functions for working with Qt.
  *
@@ -25,13 +24,12 @@ namespace bpp
 class QtTools
 {
 public:
-
   static QString toQt(const char* str)
   {
     return QString(str);
   }
 
-   static QString toQt(const std::string& str)
+  static QString toQt(const std::string& str)
   {
     return QString(str.c_str());
   }
@@ -50,30 +48,27 @@ public:
   static QColor toQt(const RGBColor& color)
   {
     return QColor(static_cast<int>(color[0]),
-		  static_cast<int>(color[1]),
-		  static_cast<int>(color[2]));
+          static_cast<int>(color[1]),
+          static_cast<int>(color[2]));
   }
 
   static QFont toQt(const Font& font)
   {
     QFont qFont(toQt(font.getFamily()), static_cast<int>(font.getSize()));
-    
+
     if (font.getStyle() == Font::STYLE_NORMAL)
-      qFont.setStyle(QFont::StyleNormal); 
-    else if(font.getStyle() == Font::STYLE_ITALIC)
-      qFont.setStyle(QFont::StyleItalic); 
-    
+      qFont.setStyle(QFont::StyleNormal);
+    else if (font.getStyle() == Font::STYLE_ITALIC)
+      qFont.setStyle(QFont::StyleItalic);
+
     if (font.getWeight() == Font::WEIGHT_NORMAL)
-      qFont.setWeight(QFont::Normal); 
+      qFont.setWeight(QFont::Normal);
     else if (font.getWeight() == Font::WEIGHT_BOLD)
-      qFont.setWeight(QFont::Bold); 
-    
+      qFont.setWeight(QFont::Bold);
+
     return qFont;
- }
-
+  }
 };
+} // end of namespace bpp;
 
-} //end of namespace bpp;
-
-#endif //_QTTOOLS_H_
-
+#endif // _QTTOOLS_H_

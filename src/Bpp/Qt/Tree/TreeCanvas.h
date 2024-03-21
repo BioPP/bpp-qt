@@ -8,48 +8,46 @@
 #include "../QtGraphicDevice.h"
 #include "../MouseListener.h"
 
-//From the STL:
+// From the STL:
 #include <vector>
 #include <map>
 #include <string>
 #include <algorithm>
 
-//From bpp-phyl:
+// From bpp-phyl:
 #include <Bpp/Phyl/Tree/Tree.h>
 #include <Bpp/Phyl/Graphics/TreeDrawing.h>
 #include <Bpp/Phyl/Graphics/AbstractTreeDrawing.h>
 
-//From Qt:
+// From Qt:
 #include <QGraphicsView>
 
 namespace bpp
 {
-
 class TreeCanvas;
 
 /**
  * @brief A simple mouse event.
  */
-class NodeMouseEvent:
+class NodeMouseEvent :
   public QMouseEvent
 {
-  private:
-    bool hasNode_;
-    int nodeId_;
+private:
+  bool hasNode_;
+  int nodeId_;
 
-  public:
-    NodeMouseEvent(const TreeCanvas& treeCanvas, const QMouseEvent& event);
+public:
+  NodeMouseEvent(const TreeCanvas& treeCanvas, const QMouseEvent& event);
 
-    bool hasNodeId() const { return hasNode_; }
+  bool hasNodeId() const { return hasNode_; }
 
-    int getNodeId() const
-    {
-      if (!hasNode_)
-        throw NodeNotFoundException("NodeMouseEvent::getNodeId().", "");
-      else
-        return nodeId_;
-    }
-
+  int getNodeId() const
+  {
+    if (!hasNode_)
+      throw NodeNotFoundException("NodeMouseEvent::getNodeId().", "");
+    else
+      return nodeId_;
+  }
 };
 
 /**
@@ -58,130 +56,126 @@ class NodeMouseEvent:
  * The graph used for plotting the tree depends on the TreeDrawing object used.
  * This panel can also capture event when a node is clicked on the tree.
  */
-class TreeCanvas:
+class TreeCanvas :
   public QGraphicsView
 {
   Q_OBJECT
 
-  private:
-    const Tree* currentTree_;
-    TreeDrawing* treeDrawing_;
-    TreeDrawing* defaultTreeDrawing_;
-    mutable QtGraphicDevice device_;
-    unsigned int drawingWidth_;
-    unsigned int drawingHeight_;
-    MouseListenerGroup mouseListenerGroup_;
-    mutable std::map<int, bool> nodeCollapsed_;
+private:
+  const Tree* currentTree_;
+  TreeDrawing* treeDrawing_;
+  TreeDrawing* defaultTreeDrawing_;
+  mutable QtGraphicDevice device_;
+  unsigned int drawingWidth_;
+  unsigned int drawingHeight_;
+  MouseListenerGroup mouseListenerGroup_;
+  mutable std::map<int, bool> nodeCollapsed_;
 
-  public:
-    TreeCanvas(QWidget* parent = 0);
+public:
+  TreeCanvas(QWidget* parent = 0);
 
-  private:
-    //No copy allowed
-    TreeCanvas(const TreeCanvas& tc):
-      currentTree_(), treeDrawing_(), defaultTreeDrawing_(), device_(),
-      drawingWidth_(), drawingHeight_(), mouseListenerGroup_(), nodeCollapsed_()
-    {}
-    TreeCanvas& operator=(const TreeCanvas& tc) { return *this; }
-      
-  public:
-    virtual ~TreeCanvas()
-    {
-      delete defaultTreeDrawing_;
-    }
+private:
+  // No copy allowed
+  TreeCanvas(const TreeCanvas& tc) :
+    currentTree_(), treeDrawing_(), defaultTreeDrawing_(), device_(),
+    drawingWidth_(), drawingHeight_(), mouseListenerGroup_(), nodeCollapsed_()
+  {}
+  TreeCanvas& operator=(const TreeCanvas& tc) { return *this; }
 
-  public:
-    virtual void setTree(const Tree* tree);
-    
-    virtual const Tree* getTree() const { return currentTree_; }
+public:
+  virtual ~TreeCanvas()
+  {
+    delete defaultTreeDrawing_;
+  }
 
-    virtual void setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint = true);
+public:
+  virtual void setTree(const Tree* tree);
 
-    virtual TreeDrawing* getTreeDrawing() { return treeDrawing_; }
-    virtual const TreeDrawing* getTreeDrawing() const { return treeDrawing_; }
+  virtual const Tree* getTree() const { return currentTree_; }
 
-    virtual QtGraphicDevice& getDevice() { return device_; }
-    virtual const QtGraphicDevice& getDevice() const { return device_; }
+  virtual void setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint = true);
 
-    virtual void setDrawingSize(unsigned int width, unsigned int height)
-    {
-      drawingWidth_  = width;
-      drawingHeight_ = height;
-      redraw();
-    }
+  virtual TreeDrawing* getTreeDrawing() { return treeDrawing_; }
+  virtual const TreeDrawing* getTreeDrawing() const { return treeDrawing_; }
 
-    virtual unsigned int drawingWidth() const { return drawingWidth_; }
-    virtual unsigned int drawingHeight() const { return drawingHeight_; }
+  virtual QtGraphicDevice& getDevice() { return device_; }
+  virtual const QtGraphicDevice& getDevice() const { return device_; }
 
-    void collapseNode(int nodeId, bool tf)
-    {
-      if (!currentTree_) return;
-      if (!currentTree_->hasNode(nodeId))
-        throw NodeNotFoundException("TreeCanvas::collapseNode.", nodeId);  
-      if (treeDrawing_)
-        treeDrawing_->collapseNode(nodeId, tf);
-      nodeCollapsed_[nodeId] = tf;
-    }
+  virtual void setDrawingSize(unsigned int width, unsigned int height)
+  {
+    drawingWidth_  = width;
+    drawingHeight_ = height;
+    redraw();
+  }
 
-    bool isNodeCollapsed(int nodeId) const
-    {
-      if (!currentTree_) return false;
-      if (!currentTree_->hasNode(nodeId))
-        throw NodeNotFoundException("TreeCanvas::isNodeCollapsed.", nodeId);  
-      return nodeCollapsed_[nodeId];
-    }
+  virtual unsigned int drawingWidth() const { return drawingWidth_; }
+  virtual unsigned int drawingHeight() const { return drawingHeight_; }
 
-    /**
-     * @brief Loop for some text in the drawing and get the corresponding coordinates.
-     *
-     * @todo We might want to use some proper indexing for this function to work properly...
-     */
-    QList<QGraphicsTextItem*> searchText(const QString& text);
+  void collapseNode(int nodeId, bool tf)
+  {
+    if (!currentTree_) return;
+    if (!currentTree_->hasNode(nodeId))
+      throw NodeNotFoundException("TreeCanvas::collapseNode.", nodeId);
+    if (treeDrawing_)
+      treeDrawing_->collapseNode(nodeId, tf);
+    nodeCollapsed_[nodeId] = tf;
+  }
 
-    /**
-     * @name Mouse handling functions.
-     *
-     * @{
-     */
-    void addMouseListener(MouseListener* listener)
-    {
-      mouseListenerGroup_.addMouseListener(listener);
-    }
+  bool isNodeCollapsed(int nodeId) const
+  {
+    if (!currentTree_) return false;
+    if (!currentTree_->hasNode(nodeId))
+      throw NodeNotFoundException("TreeCanvas::isNodeCollapsed.", nodeId);
+    return nodeCollapsed_[nodeId];
+  }
 
-    virtual void redraw();
+  /**
+   * @brief Loop for some text in the drawing and get the corresponding coordinates.
+   *
+   * @todo We might want to use some proper indexing for this function to work properly...
+   */
+  QList<QGraphicsTextItem*> searchText(const QString& text);
 
-  protected:
-  
-    void mouseDoubleClickEvent(QMouseEvent* event)
-    {
-      std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
-      mouseListenerGroup_.processMouseDoubleClickEvent(newEvent.get());
-    }
+  /**
+   * @name Mouse handling functions.
+   *
+   * @{
+   */
+  void addMouseListener(MouseListener* listener)
+  {
+    mouseListenerGroup_.addMouseListener(listener);
+  }
 
-    void mouseMoveEvent(QMouseEvent* event)
-    {
-      std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
-      mouseListenerGroup_.processMouseMoveEvent(newEvent.get());
-    }
-    void mousePressEvent(QMouseEvent* event)
-    {
-      std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
-      mouseListenerGroup_.processMousePressEvent(newEvent.get());
-    }
+  virtual void redraw();
 
-    void mouseReleaseEvent(QMouseEvent* event)
-    {
-      std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
-      mouseListenerGroup_.processMouseReleaseEvent(newEvent.get());
-    }
-    /** @} */
+protected:
+  void mouseDoubleClickEvent(QMouseEvent* event)
+  {
+    std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+    mouseListenerGroup_.processMouseDoubleClickEvent(newEvent.get());
+  }
 
-  signals:
-    void drawingChanged();
+  void mouseMoveEvent(QMouseEvent* event)
+  {
+    std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+    mouseListenerGroup_.processMouseMoveEvent(newEvent.get());
+  }
+  void mousePressEvent(QMouseEvent* event)
+  {
+    std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+    mouseListenerGroup_.processMousePressEvent(newEvent.get());
+  }
 
+  void mouseReleaseEvent(QMouseEvent* event)
+  {
+    std::unique_ptr<NodeMouseEvent> newEvent(new NodeMouseEvent(*this, *event));
+    mouseListenerGroup_.processMouseReleaseEvent(newEvent.get());
+  }
+  /** @} */
+
+signals:
+  void drawingChanged();
 };
+} // end of namespace bpp.
 
-} //end of namespace bpp.
-
-#endif //_TREECANVAS_H_
-
+#endif // _TREECANVAS_H_
