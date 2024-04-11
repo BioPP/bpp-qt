@@ -50,13 +50,13 @@ TreeCanvasControlers::TreeCanvasControlers(QWidget* parent) : treeCanvas_(0)
   // TreeDrawing algorithm choice and options:
   widthCtrl_   = new QSpinBox(parent);
   widthCtrl_->setRange(100, 100000);
-  connect(widthCtrl_, SIGNAL(valueChanged(int)), this, SLOT(treeDrawingUnitChanged()));
+  connect(widthCtrl_, &QSpinBox::valueChanged, this, &TreeCanvasControlers::treeDrawingUnitChanged);
   heightCtrl_  = new QSpinBox(parent);
   heightCtrl_->setRange(100, 100000);
-  connect(heightCtrl_, SIGNAL(valueChanged(int)), this, SLOT(treeDrawingUnitChanged()));
+  connect(heightCtrl_, &QSpinBox::valueChanged, this, &TreeCanvasControlers::treeDrawingUnitChanged);
   drawingCtrl_ = new QComboBox(parent);
   drawingCtrl_->addItems(availableTreeDrawings_);
-  connect(drawingCtrl_, SIGNAL(currentIndexChanged(int)), this, SLOT(treeDrawingChanged()));
+  connect(drawingCtrl_, &QComboBox::currentIndexChanged, this, &TreeCanvasControlers::treeDrawingChanged);
 
   orientationCtrl_ = new QGroupBox(parent);
   QRadioButton* leftButton  = new QRadioButton(QString("L"), orientationCtrl_);
@@ -70,9 +70,9 @@ TreeCanvasControlers::TreeCanvasControlers(QWidget* parent) : treeCanvas_(0)
   hbox->addWidget(downButton);
   orientationCtrl_->setLayout(hbox);
   orientationLeftRight_ = new QButtonGroup;
-  connect(orientationLeftRight_, SIGNAL(buttonClicked(int)), this, SLOT(treeDrawingChanged()));
+  connect(orientationLeftRight_, &QButtonGroup::buttonClicked, this, &TreeCanvasControlers::treeDrawingChanged);
   orientationUpDown_    = new QButtonGroup;
-  connect(orientationUpDown_, SIGNAL(buttonClicked(int)), this, SLOT(treeDrawingChanged()));
+  connect(orientationUpDown_, &QButtonGroup::buttonClicked, this, &TreeCanvasControlers::treeDrawingChanged);
   orientationLeftRight_->addButton(leftButton, 1);
   orientationLeftRight_->addButton(rightButton, 2);
   orientationUpDown_->addButton(upButton, 3);
@@ -86,11 +86,11 @@ TreeCanvasControlers::TreeCanvasControlers(QWidget* parent) : treeCanvas_(0)
   drawLeavesNames_        = new QCheckBox("Leaves names", parent);
   drawBranchLengthValues_ = new QCheckBox("Branch lengths", parent);
   drawBootstrapValues_    = new QCheckBox("Boostrap values", parent);
-  connect(drawClickableAreas_, SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
-  connect(drawNodesId_, SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
-  connect(drawLeavesNames_, SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
-  connect(drawBranchLengthValues_, SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
-  connect(drawBootstrapValues_, SIGNAL(stateChanged(int)), this, SLOT(treeDrawingChanged()));
+  connect(drawClickableAreas_, &QCheckBox::stateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
+  connect(drawNodesId_, &QCheckBox::stateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
+  connect(drawLeavesNames_, &QCheckBox::stateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
+  connect(drawBranchLengthValues_, &QCheckBox::stateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
+  connect(drawBootstrapValues_, &QCheckBox::stateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
   drawLeavesNames_->setChecked(true);
 
   blockSignal_ = false;
@@ -183,7 +183,7 @@ void TreeCanvasControlers::actualizeOptions()
   blockSignal_ = true; // Dirty trick but no choice!
   widthCtrl_->setValue(static_cast<int>(treeCanvas_->drawingWidth()));
   heightCtrl_->setValue(static_cast<int>(treeCanvas_->drawingHeight()));
-  drawingCtrl_->setCurrentIndex(availableTreeDrawings_.indexOf(QString(current->getName().c_str())));
+  drawingCtrl_->setCurrentIndex(static_cast<int>(availableTreeDrawings_.indexOf(QString(current->getName().c_str()))));
   if (current->getHorizontalOrientation() == AbstractDendrogramPlot::ORIENTATION_LEFT_TO_RIGHT)
     orientationLeftRight_->buttons()[0]->setChecked(true);
   else
