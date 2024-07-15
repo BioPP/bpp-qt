@@ -78,11 +78,11 @@ private:
   QCheckBox* drawBranchLengthValues_;
   QCheckBox* drawBootstrapValues_;
 
-  CladogramPlot* cladogram_;
-  PhylogramPlot* phylogram_;
+  std::shared_ptr<CladogramPlot> cladogram_;
+  std::shared_ptr<PhylogramPlot> phylogram_;
   QStringList availableTreeDrawings_;
-  TreeDrawingSettings* tdSettings_;
-  TreeDrawingDisplayControler* tdDisplayControler_;
+  std::shared_ptr<TreeDrawingSettings> tdSettings_;
+  std::unique_ptr<TreeDrawingDisplayControler> tdDisplayControler_;
 
   // Other controls may be added later.
 
@@ -114,16 +114,46 @@ public:
   QWidget* getControlerById(int id);
 
   void setTreeCanvas(TreeCanvas* canvas, bool updateOptions = true);
+
   TreeCanvas* getTreeCanvas() { return treeCanvas_; }
   const TreeCanvas* getTreeCanvas() const { return treeCanvas_; }
+  
+  TreeCanvas& treeCanvas() {
+    if (treeCanvas_) {
+      return *treeCanvas_;
+    } else {
+      throw NullPointerException("TreeCanvasControlers::treeCanvas(). No associated TreeCanvas.");
+    }
+  }
+  const TreeCanvas& rreeCanvas() const {
+    if (treeCanvas_) {
+      return *treeCanvas_;
+    } else {
+      throw NullPointerException("TreeCanvasControlers::treeCanvas() const. No associated TreeCanvas.");
+    }
+  }
 
-  TreeDrawing* getTreeDrawing(unsigned int i);
+  std::shared_ptr<TreeDrawing> getTreeDrawing(unsigned int i);
+  
+  const TreeDrawing& treeDrawing(unsigned int i) const;
+  
+  TreeDrawing& treeDrawing(unsigned int i);
 
-  TreeDrawing* getSelectedTreeDrawing() { return getTreeDrawing(static_cast<unsigned int>(drawingCtrl_->currentIndex())); }
+  std::shared_ptr<TreeDrawing> getSelectedTreeDrawing() {
+    return getTreeDrawing(static_cast<unsigned int>(drawingCtrl_->currentIndex()));
+  }
+
+  const TreeDrawing& selectedTreeDrawing() const {
+    return treeDrawing(static_cast<unsigned int>(drawingCtrl_->currentIndex()));
+  }
+
+  TreeDrawing& selectedTreeDrawing() {
+    return treeDrawing(static_cast<unsigned int>(drawingCtrl_->currentIndex()));
+  }
 
   unsigned int getNumberOfTreeDrawings() const { return 2; }
 
-  void applyOptions(TreeCanvas* canvas);
+  void applyOptions(TreeCanvas& canvas);
 
   void addActionListener(TreeCanvasControlersListener* listener)
   {

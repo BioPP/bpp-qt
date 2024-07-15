@@ -5,7 +5,7 @@
 #include "TreeCanvas.h"
 #include <QGraphicsItem>
 
-// From PhyLib:
+// From bpp-phyl:
 #include <Bpp/Phyl/Graphics/CladogramPlot.h>
 
 using namespace bpp;
@@ -84,20 +84,18 @@ void TreeCanvas::redraw()
   }
 }
 
-void TreeCanvas::setTree(const Tree* tree)
+void TreeCanvas::setTree(std::shared_ptr<const Tree> tree)
 {
   currentTree_ = tree;
-  treeDrawing_->setTree(tree);
+  treeDrawing_->setTree(*tree);
   nodeCollapsed_.clear();
   redraw();
 }
 
 void TreeCanvas::setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint)
 {
-  if (treeDrawing_ != defaultTreeDrawing_)
-    delete treeDrawing_;
-  treeDrawing_ = dynamic_cast<TreeDrawing*>(treeDrawing.clone());
-  treeDrawing_->setTree(currentTree_);
+  treeDrawing_ = shared_ptr<TreeDrawing>(treeDrawing.clone());
+  treeDrawing_->setTree(*currentTree_);
   vector<int> ids = currentTree_->getNodesId();
   for (size_t i = 0; i < ids.size(); i++)
   {

@@ -11,11 +11,12 @@
 #include <QButtonGroup>
 
 using namespace bpp;
+using namespace std;
 
 void NodeClickableAreasTreeDrawingListener::afterDrawNode(const DrawNodeEvent& event)
 {
   const TreeDrawing* td = event.getTreeDrawing();
-  double r = td->getDisplaySettings().pointArea;
+  double r = td->displaySettings().pointArea;
   GraphicDevice* gd = event.getGraphicDevice();
   Cursor cursor     = event.getCursor();
   gd->drawRect(cursor.getX() - r, cursor.getY() - r, 2 * r, 2 * r);
@@ -32,17 +33,17 @@ const int TreeCanvasControlers::ID_DRAW_BRANCH_LENGTHS_CTRL   = 8;
 const int TreeCanvasControlers::ID_DRAW_BOOTSTRAP_VALUES_CTRL = 9;
 const std::string TreeCanvasControlers::PROPERTY_CLICKABLE_AREA = "Clickable area";
 
-TreeCanvasControlers::TreeCanvasControlers(QWidget* parent) : treeCanvas_(0)
+TreeCanvasControlers::TreeCanvasControlers(QWidget* parent) : treeCanvas_(nullptr)
 {
   // Drawing algorithms and controler:
-  tdSettings_ = new TreeDrawingSettings();
-  phylogram_ = new PhylogramPlot();
-  cladogram_ = new CladogramPlot();
+  tdSettings_ = std::make_shared<TreeDrawingSettings>();
+  phylogram_.reset(new PhylogramPlot());
+  cladogram_.reset(new CladogramPlot());
   phylogram_->setDisplaySettings(tdSettings_);
   cladogram_->setDisplaySettings(tdSettings_);
   availableTreeDrawings_.append(QString(cladogram_->getName().c_str()));
   availableTreeDrawings_.append(QString(phylogram_->getName().c_str()));
-  tdDisplayControler_ = new BasicTreeDrawingDisplayControler(tdSettings_);
+  tdDisplayControler_ = std::make_unique<BasicTreeDrawingDisplayControler>(tdSettings_);
   tdDisplayControler_->addListener(PROPERTY_CLICKABLE_AREA, new NodeClickableAreasTreeDrawingListener(true));
   tdDisplayControler_->registerTreeDrawing(phylogram_);
   tdDisplayControler_->registerTreeDrawing(cladogram_);
@@ -108,10 +109,6 @@ TreeCanvasControlers::~TreeCanvasControlers()
   delete drawLeavesNames_;
   delete drawBranchLengthValues_;
   delete drawBootstrapValues_;
-  delete phylogram_;
-  delete cladogram_;
-  delete tdSettings_;
-  delete tdDisplayControler_;
 }
 
 
@@ -121,25 +118,25 @@ void TreeCanvasControlers::setTreeCanvas(TreeCanvas* canvas, bool updateOptions)
   if (updateOptions)
     actualizeOptions();
   else
-    applyOptions(treeCanvas_);
+    applyOptions(*treeCanvas_);
 }
 
 
-void TreeCanvasControlers::applyOptions(TreeCanvas* canvas)
+void TreeCanvasControlers::applyOptions(TreeCanvas& canvas)
 {
   QString selection = drawingCtrl_->currentText();
-  if (QString(canvas->getTreeDrawing()->getName().c_str()) != selection)
+  if (QString(canvas.treeDrawing().getName().c_str()) != selection)
   {
     if (selection == QString(cladogram_->getName().c_str()))
     {
-      canvas->setTreeDrawing(*cladogram_, false);
+      canvas.setTreeDrawing(*cladogram_, false);
     }
     else if (selection == QString(phylogram_->getName().c_str()))
     {
-      canvas->setTreeDrawing(*phylogram_, false);
+      canvas.setTreeDrawing(*phylogram_, false);
     }
   }
-  AbstractDendrogramPlot* treeDrawing = dynamic_cast<AbstractDendrogramPlot*>(canvas->getTreeDrawing());
+  auto treeDrawing = std::dynamic_pointer_cast<AbstractDendrogramPlot>(canvas.getTreeDrawing());
 
   treeDrawing->setHorizontalOrientation(orientationLeftRight_->checkedId() == 1 ? AbstractDendrogramPlot::ORIENTATION_LEFT_TO_RIGHT : AbstractDendrogramPlot::ORIENTATION_RIGHT_TO_LEFT);
   treeDrawing->setVerticalOrientation(orientationUpDown_->checkedId() == 3 ? AbstractDendrogramPlot::ORIENTATION_TOP_TO_BOTTOM : AbstractDendrogramPlot::ORIENTATION_BOTTOM_TO_TOP);
@@ -160,7 +157,7 @@ void TreeCanvasControlers::treeDrawingChanged()
   if (!treeCanvas_)
     return;
   if (!blockSignal_)
-    applyOptions(treeCanvas_);
+    applyOptions(*treeCanvas_);
 }
 
 
@@ -179,7 +176,7 @@ void TreeCanvasControlers::actualizeOptions()
 {
   if (!treeCanvas_)
     return;
-  AbstractDendrogramPlot* current = dynamic_cast<AbstractDendrogramPlot*>(treeCanvas_->getTreeDrawing());
+  auto current = std::dynamic_pointer_cast<AbstractDendrogramPlot>(treeCanvas_->getTreeDrawing());
   blockSignal_ = true; // Dirty trick but no choice!
   widthCtrl_->setValue(static_cast<int>(treeCanvas_->drawingWidth()));
   heightCtrl_->setValue(static_cast<int>(treeCanvas_->drawingHeight()));
@@ -225,11 +222,32 @@ QWidget* TreeCanvasControlers::getControlerById(int id)
   return 0;
 }
 
-TreeDrawing* TreeCanvasControlers::getTreeDrawing(unsigned int i)
+std::shared_ptr<TreeDrawing> TreeCanvasControlers::getTreeDrawing(unsigned int i)
 {
   if (i == 0)
     return cladogram_;
   if (i == 1)
     return phylogram_;
-  return 0;
+  return nullptr;
 }
+
+TreeDrawing& TreeCanvasControlers::treeDrawing(unsigned int i)
+{
+  if (i == 0)
+    return *cladogram_;
+  if (i == 1)
+    return *phylogram_;
+  throw Exception("TreeCanvasControlers::treeDrawing(unsigned int i). No TreeDrawing with this index: " + TextTools::toString(i) + ".");
+}
+
+const TreeDrawing& TreeCanvasControlers::treeDrawing(unsigned int i) const
+{
+  if (i == 0)
+    return *cladogram_;
+  if (i == 1)
+    return *phylogram_;
+  throw Exception("TreeCanvasControlers::treeDrawing(unsigned int i) const. No TreeDrawing with this index: " + TextTools::toString(i) + ".");
+}
+
+
+

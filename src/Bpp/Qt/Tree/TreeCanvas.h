@@ -62,9 +62,9 @@ class TreeCanvas :
   Q_OBJECT
 
 private:
-  const Tree* currentTree_;
-  TreeDrawing* treeDrawing_;
-  TreeDrawing* defaultTreeDrawing_;
+  std::shared_ptr<const Tree> currentTree_;
+  std::shared_ptr<TreeDrawing> treeDrawing_;
+  std::shared_ptr<TreeDrawing> defaultTreeDrawing_;
   mutable QtGraphicDevice device_;
   unsigned int drawingWidth_;
   unsigned int drawingHeight_;
@@ -83,20 +83,29 @@ private:
   TreeCanvas& operator=(const TreeCanvas& tc) { return *this; }
 
 public:
-  virtual ~TreeCanvas()
-  {
-    delete defaultTreeDrawing_;
-  }
+  virtual ~TreeCanvas() = default;
 
 public:
-  virtual void setTree(const Tree* tree);
+  virtual void setTree(std::shared_ptr<const Tree> tree);
 
-  virtual const Tree* getTree() const { return currentTree_; }
+  virtual std::shared_ptr<const Tree> getTree() const { return currentTree_; }
+  
+  virtual const Tree& tree() const
+  {
+    if (currentTree_) {
+      return *currentTree_;
+    } else {
+      throw NullPointerException("TreeCanvas::tree() const. No tree is associated to this TreeCanvas object.");
+    }
+  }
 
   virtual void setTreeDrawing(const TreeDrawing& treeDrawing, bool repaint = true);
 
-  virtual TreeDrawing* getTreeDrawing() { return treeDrawing_; }
-  virtual const TreeDrawing* getTreeDrawing() const { return treeDrawing_; }
+  virtual std::shared_ptr<TreeDrawing> getTreeDrawing() { return treeDrawing_; }
+  virtual std::shared_ptr<const TreeDrawing> getTreeDrawing() const { return treeDrawing_; }
+
+  virtual TreeDrawing& treeDrawing() { return *treeDrawing_; }
+  virtual const TreeDrawing& treeDrawing() const { return *treeDrawing_; }
 
   virtual QtGraphicDevice& getDevice() { return device_; }
   virtual const QtGraphicDevice& getDevice() const { return device_; }
