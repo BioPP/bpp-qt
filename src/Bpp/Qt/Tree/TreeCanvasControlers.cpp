@@ -87,11 +87,11 @@ TreeCanvasControlers::TreeCanvasControlers(QWidget* parent) : treeCanvas_(nullpt
   drawLeavesNames_        = new QCheckBox("Leaves names", parent);
   drawBranchLengthValues_ = new QCheckBox("Branch lengths", parent);
   drawBootstrapValues_    = new QCheckBox("Boostrap values", parent);
-  connect(drawClickableAreas_, &QCheckBox::stateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
-  connect(drawNodesId_, &QCheckBox::stateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
-  connect(drawLeavesNames_, &QCheckBox::stateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
-  connect(drawBranchLengthValues_, &QCheckBox::stateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
-  connect(drawBootstrapValues_, &QCheckBox::stateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
+  connect(drawClickableAreas_, &QCheckBox::checkStateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
+  connect(drawNodesId_, &QCheckBox::checkStateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
+  connect(drawLeavesNames_, &QCheckBox::checkStateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
+  connect(drawBranchLengthValues_, &QCheckBox::checkStateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
+  connect(drawBootstrapValues_, &QCheckBox::checkStateChanged, this, &TreeCanvasControlers::treeDrawingChanged);
   drawLeavesNames_->setChecked(true);
 
   blockSignal_ = false;

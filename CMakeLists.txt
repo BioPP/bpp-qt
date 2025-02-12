@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: CECILL-2.1
 
-cmake_minimum_required (VERSION 3.5.0)
+cmake_minimum_required (VERSION 3.10)
 project (bpp-qt3 CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
