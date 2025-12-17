@@ -89,12 +89,15 @@ public:
   virtual void setTree(std::shared_ptr<const Tree> tree);
 
   virtual std::shared_ptr<const Tree> getTree() const { return currentTree_; }
-  
+
   virtual const Tree& tree() const
   {
-    if (currentTree_) {
+    if (currentTree_)
+    {
       return *currentTree_;
-    } else {
+    }
+    else
+    {
       throw NullPointerException("TreeCanvas::tree() const. No tree is associated to this TreeCanvas object.");
     }
   }

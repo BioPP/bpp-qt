@@ -117,37 +117,48 @@ public:
 
   TreeCanvas* getTreeCanvas() { return treeCanvas_; }
   const TreeCanvas* getTreeCanvas() const { return treeCanvas_; }
-  
-  TreeCanvas& treeCanvas() {
-    if (treeCanvas_) {
+
+  TreeCanvas& treeCanvas()
+  {
+    if (treeCanvas_)
+    {
       return *treeCanvas_;
-    } else {
+    }
+    else
+    {
       throw NullPointerException("TreeCanvasControlers::treeCanvas(). No associated TreeCanvas.");
     }
   }
-  const TreeCanvas& rreeCanvas() const {
-    if (treeCanvas_) {
+  const TreeCanvas& rreeCanvas() const
+  {
+    if (treeCanvas_)
+    {
       return *treeCanvas_;
-    } else {
+    }
+    else
+    {
       throw NullPointerException("TreeCanvasControlers::treeCanvas() const. No associated TreeCanvas.");
     }
   }
 
   std::shared_ptr<TreeDrawing> getTreeDrawing(unsigned int i);
-  
+
   const TreeDrawing& treeDrawing(unsigned int i) const;
-  
+
   TreeDrawing& treeDrawing(unsigned int i);
 
-  std::shared_ptr<TreeDrawing> getSelectedTreeDrawing() {
+  std::shared_ptr<TreeDrawing> getSelectedTreeDrawing()
+  {
     return getTreeDrawing(static_cast<unsigned int>(drawingCtrl_->currentIndex()));
   }
 
-  const TreeDrawing& selectedTreeDrawing() const {
+  const TreeDrawing& selectedTreeDrawing() const
+  {
     return treeDrawing(static_cast<unsigned int>(drawingCtrl_->currentIndex()));
   }
 
-  TreeDrawing& selectedTreeDrawing() {
+  TreeDrawing& selectedTreeDrawing()
+  {
     return treeDrawing(static_cast<unsigned int>(drawingCtrl_->currentIndex()));
   }
 

@@ -248,6 +248,3 @@ const TreeDrawing& TreeCanvasControlers::treeDrawing(unsigned int i) const
     return *phylogram_;
   throw Exception("TreeCanvasControlers::treeDrawing(unsigned int i) const. No TreeDrawing with this index: " + TextTools::toString(i) + ".");
 }
-
-
-
