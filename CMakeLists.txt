@@ -87,7 +87,7 @@ else(NO_DEP_CHECK)
     endif(CMAKE_INSTALL_PREFIX)
 
     include(GNUInstallDirs)
-    find_package(bpp-phyl 3.0.0 REQUIRED)
+    find_package(bpp-phyl 13.0.0 REQUIRED)
 
     # Find the Qt installation
     #set (QT_USE_IMPORTED_TARGETS TRUE)
@@ -156,7 +156,7 @@ else(NO_DEP_CHECK)
 endif(NO_DEP_CHECK)
 
 # Packager
-set(CPACK_PACKAGE_NAME "libbpp-qt3")
+set(CPACK_PACKAGE_NAME "libbpp-qt")
 set(CPACK_PACKAGE_VENDOR "Bio++ Development Team")
 set(CPACK_PACKAGE_VERSION "3.0.0")
 set(CPACK_PACKAGE_VERSION_MAJOR "3")
